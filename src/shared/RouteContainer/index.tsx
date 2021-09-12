@@ -37,7 +37,10 @@ export type NavigationItem = {
   type: 'native-stack' | 'bottom-tabs' | 'stack';
   routes: (RouteItem | NavigationItem)[];
   component?: never;
-  options?: never;
+  options?:
+    | BottomTabNavigationOptions
+    | NativeStackNavigationOptions
+    | StackNavigationOptions;
 };
 
 export type RouteContainerProps = {
