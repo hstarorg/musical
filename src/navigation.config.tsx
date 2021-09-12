@@ -7,6 +7,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import MusicListScrren from './screens/MusicListScrren';
 import PlayScreen from './screens/PlayScreen';
 import MineScreen from './screens/MineScreen';
+import { Button } from 'react-native';
 
 export const navigationConfig: NavigationItem = {
   name: 'Root',
@@ -18,6 +19,7 @@ export const navigationConfig: NavigationItem = {
       options: {
         // tabBarBadge: '66',
         tabBarLabel: '播放',
+        headerShown: false,
         tabBarIcon: ({ size, color }) => (
           <FontAwesome5Icon name="play-circle" size={size} color={color} />
         ),
@@ -27,10 +29,14 @@ export const navigationConfig: NavigationItem = {
       name: 'MusicListScrren',
       component: MusicListScrren,
       options: {
-        tabBarLabel: '列表',
+        tabBarLabel: '音乐',
+        title: '本地音乐',
         tabBarIcon: ({ size, color }) => (
           <FontAwesome5Icon name="music" size={size} color={color} />
         ),
+        // headerRight: () => {
+        //   return <Button title="扫描"></Button>;
+        // },
       },
     },
     {

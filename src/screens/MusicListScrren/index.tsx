@@ -1,99 +1,105 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
-  StyleSheet,
   View,
-  Text,
   useColorScheme,
-  SafeAreaView,
-  ScrollView,
   StatusBar,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
 } from 'react-native';
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import styles from './styles';
+import { ScreenPropsBase } from '../../types';
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-const Section: React.FC<{
-  title: string;
-}> = ({ children, title }) => {
+export default (props: ScreenPropsBase) => {
+  const { navigation } = props;
   const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-export default () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [musicList, setMusicList] = useState<any>([]);
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      setMusicList([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
+    }, 2000);
+  }, []);
+
+  useLayoutEffect(() => {
+    (navigation as any).setOptions({
+      headerRight: () => {
+        return (
+          <TouchableOpacity
+            style={{ paddingRight: 16 }}
+            onPress={() => {
+              alert('研发中');
+            }}>
+            <Text style={{ color: 'blue' }}>扫描本地音乐</Text>
+            {/* <AntIcon name="lock" size={16} /> */}
+          </TouchableOpacity>
+        );
+      },
+    });
+  }, [navigation]);
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}>
-        <Text>Hi</Text>
-      </StatusBar>
-      <ScrollView
+    <View style={{ backgroundColor: '#212121' }}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      {/* <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
+       
+      </ScrollView> */}
+      {musicList.length === 0 ? (
         <View
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            alignSelf: 'center',
+            flex: 0.5,
+            marginTop: '20%',
+            flexShrink: 0,
+            flexGrow: 0,
+            width: 220,
           }}>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          <AntIcon.Button name="plus">还没有本地音乐，立即添加</AntIcon.Button>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      ) : (
+        <FlatList
+          data={musicList}
+          style={{ paddingLeft: 16, paddingRight: 16 }}
+          renderItem={item => {
+            return (
+              <View
+                key={Math.random().toString()}
+                style={{
+                  flexDirection: 'row',
+                  height: 80,
+                  borderBottomColor: '#ccc',
+                  borderBottomWidth: 1,
+                  paddingTop: 20,
+                }}>
+                <View>
+                  <Image
+                    source={{
+                      uri: 'https://avatars.githubusercontent.com/u/4043284?s=120&v=4',
+                    }}
+                    style={{ width: 40, height: 40 }}
+                  />
+                </View>
+                <View style={{ paddingLeft: 12 }}>
+                  <Text style={{ fontSize: 16, lineHeight: 20, color: '#eee' }}>
+                    歌曲名称
+                  </Text>
+                  <Text
+                    style={{ fontSize: 12, lineHeight: 20, color: '#e4e4e4' }}>
+                    歌曲作者
+                  </Text>
+                </View>
+              </View>
+            );
+          }}></FlatList>
+      )}
+    </View>
   );
 };
