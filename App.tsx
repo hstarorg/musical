@@ -14,7 +14,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { enableScreens } from 'react-native-screens';
 import { RouteContainer } from './src/shared';
 import { navigationConfig } from './src/navigation.config';
-enableScreens();
+enableScreens(true);
 
 const App = () => {
   return (

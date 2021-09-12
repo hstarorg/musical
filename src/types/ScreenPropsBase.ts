@@ -1,6 +1,7 @@
 export type ScreenPropsBase = {
   navigation: {
     navigate: (name: string) => void;
+    jumpTo: (name: string) => void;
   };
   route: {
     name: string;
