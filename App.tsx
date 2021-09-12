@@ -11,22 +11,15 @@
 import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { enableScreens } from 'react-native-screens';
-import HomePage from './src/screens/HomePage';
-import Page2 from './src/screens/Page2';
-
-const bottomTabNavigator = createBottomTabNavigator();
-
+import { RouteContainer } from './src/shared';
+import { navigationConfig } from './src/navigation.config';
 enableScreens();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <bottomTabNavigator.Navigator initialRouteName="Home">
-        <bottomTabNavigator.Screen name="Home" component={HomePage} />
-        <bottomTabNavigator.Screen name="Page1" component={Page2} />
-      </bottomTabNavigator.Navigator>
+      <RouteContainer navigationConfig={navigationConfig} />
     </NavigationContainer>
   );
 };
