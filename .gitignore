@@ -57,3 +57,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# 本地配置文件
+android/.project
+android/.settings/org.eclipse.buildship.core.prefs
