@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, Button, Alert } from 'react-native';
+import { View, Text } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Bar as ProgressBar } from 'react-native-progress';
@@ -8,6 +8,7 @@ import { WebView } from 'react-native-webview';
 import { ScreenPropsBase } from '../../types';
 import styles from './styles';
 import { musicUtil } from '../../utils';
+import { htmlContent } from './htmlContent';
 
 const m01 = require('../../assets/01.mp3');
 
@@ -72,8 +73,9 @@ export default (props: ScreenPropsBase) => {
       </View>
       <View style={styles.graphArea}>
         <WebView
-          style={{ backgroundColor: 'red' }}
-          source={{ uri: 'https://baidu.com' }}
+          // style={{ backgroundColor: 'red' }}
+          source={{ html: htmlContent }}
+          javaScriptEnabled={true}
         />
       </View>
       <View style={styles.infoArea}>
