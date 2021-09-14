@@ -3,41 +3,35 @@ import { View, Text } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Bar as ProgressBar } from 'react-native-progress';
-import Sound from 'react-native-sound';
 import { WebView } from 'react-native-webview';
 import { ScreenPropsBase } from '../../types';
 import styles from './styles';
 import { musicUtil } from '../../utils';
 import { htmlContent } from './htmlContent';
+import { soundManager } from '../../services';
 
-const m01 = require('../../assets/01.mp3');
+const m01 = require('../../assets/02.mp3');
 
 export default (props: ScreenPropsBase) => {
   const { navigation } = props;
-  const musicRef = useRef<any>();
   const [totalDuration, setTotalDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [playStatus, setPlayStatus] = useState<'pause' | 'playing'>('pause');
 
   useEffect(() => {
-    const s1 = (musicRef.current = new Sound(m01, err => {
-      console.log(err);
-      setTotalDuration(s1.getDuration());
-    }));
+    soundManager.setSound(m01).then(() => {
+      setTotalDuration(soundManager.getDuration());
+    });
 
     return () => {
-      if (musicRef.current) {
-        musicRef.current.stop(() => {
-          musicRef.current?.release();
-        });
-      }
+      soundManager.stop();
     };
   }, []);
 
   useEffect(() => {
     let timer = setInterval(() => {
-      musicRef.current.getCurrentTime((seconds: number, isPlaying: boolean) => {
-        setCurrentTime(seconds);
+      soundManager.getCurrentTime().then((result: any) => {
+        setCurrentTime(result.seconds);
       });
     }, 1000);
     return () => {
@@ -47,13 +41,13 @@ export default (props: ScreenPropsBase) => {
 
   const doPlay = useCallback(() => {
     if (playStatus === 'pause') {
-      musicRef.current.play();
+      soundManager.play();
       setPlayStatus('playing');
     } else if (playStatus === 'playing') {
-      musicRef.current.pause();
+      soundManager.pause();
       setPlayStatus('pause');
     }
-  }, [playStatus, musicRef]);
+  }, [playStatus]);
 
   // 进度条
   const progress = currentTime / totalDuration || 0;

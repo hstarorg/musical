@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import {
   View,
   useColorScheme,
@@ -6,25 +6,62 @@ import {
   FlatList,
   Image,
   Text,
+  Alert,
   TouchableOpacity,
+  PermissionsAndroid,
 } from 'react-native';
+import RNFS from 'react-native-fs';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
 import { ScreenPropsBase } from '../../types';
+import { fsExtra, nativeUtil } from '../../utils';
+import { soundManager } from '../../services';
 
 export default (props: ScreenPropsBase) => {
   const { navigation } = props;
   const isDarkMode = useColorScheme() === 'dark';
-  const [musicList, setMusicList] = useState<any>([]);
+  const [musicList, setMusicList] = useState<RNFS.ReadDirItem[]>([]);
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setMusicList([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]);
-    }, 2000);
+  const scanMusicList = useCallback(async () => {
+    const granted = await nativeUtil.requestPermissionAndroid(
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+    );
+    if (granted) {
+      fsExtra
+        .filterFiles(
+          RNFS.ExternalStorageDirectoryPath,
+          (item: RNFS.ReadDirItem) => {
+            return item.path.endsWith('.mp3');
+          },
+          true,
+        )
+        .then(files => {
+          console.log(files, 'files');
+          setMusicList(files);
+          Alert.alert('扫描完毕');
+        })
+        .catch(() => {
+          Alert.alert('异常了！');
+        });
+    } else {
+      Alert.alert('您未授权');
+    }
+  }, []);
+
+  const handleMusicPress = useCallback((musicInfo: RNFS.ReadDirItem) => {
+    soundManager
+      .setSound(musicInfo.path)
+      .then(() => {
+        soundManager.play();
+      })
+      .catch(err => {
+        Alert.alert('err' + err.message);
+        console.error(err);
+      });
   }, []);
 
   useLayoutEffect(() => {
@@ -33,9 +70,7 @@ export default (props: ScreenPropsBase) => {
         return (
           <TouchableOpacity
             style={{ paddingRight: 16 }}
-            onPress={() => {
-              alert('研发中');
-            }}>
+            onPress={scanMusicList}>
             <Text style={{ color: 'blue' }}>扫描本地音乐</Text>
             {/* <AntIcon name="lock" size={16} /> */}
           </TouchableOpacity>
@@ -56,11 +91,9 @@ export default (props: ScreenPropsBase) => {
         <View
           style={{
             alignSelf: 'center',
-            flex: 0.5,
-            marginTop: '20%',
-            flexShrink: 0,
-            flexGrow: 0,
+            justifyContent: 'center',
             width: 220,
+            height: '100%',
           }}>
           <AntIcon.Button name="plus">还没有本地音乐，立即添加</AntIcon.Button>
         </View>
@@ -68,35 +101,43 @@ export default (props: ScreenPropsBase) => {
         <FlatList
           data={musicList}
           style={{ paddingLeft: 16, paddingRight: 16 }}
-          renderItem={item => {
+          renderItem={info => {
+            const musicInfo = info.item;
             return (
-              <View
-                key={Math.random().toString()}
-                style={{
-                  flexDirection: 'row',
-                  height: 80,
-                  borderBottomColor: '#ccc',
-                  borderBottomWidth: 1,
-                  paddingTop: 20,
-                }}>
-                <View>
-                  <Image
-                    source={{
-                      uri: 'https://avatars.githubusercontent.com/u/4043284?s=120&v=4',
-                    }}
-                    style={{ width: 40, height: 40 }}
-                  />
+              <TouchableOpacity onPress={() => handleMusicPress(musicInfo)}>
+                <View
+                  key={Math.random().toString()}
+                  style={{
+                    flexDirection: 'row',
+                    height: 80,
+                    borderBottomColor: '#ccc',
+                    borderBottomWidth: 1,
+                    paddingTop: 20,
+                  }}>
+                  <View>
+                    <Image
+                      source={{
+                        uri: 'https://avatars.githubusercontent.com/u/4043284?s=120&v=4',
+                      }}
+                      style={{ width: 40, height: 40 }}
+                    />
+                  </View>
+                  <View style={{ paddingLeft: 12 }}>
+                    <Text
+                      style={{ fontSize: 16, lineHeight: 20, color: '#eee' }}>
+                      {musicInfo.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        lineHeight: 20,
+                        color: '#e4e4e4',
+                      }}>
+                      {musicInfo.path}
+                    </Text>
+                  </View>
                 </View>
-                <View style={{ paddingLeft: 12 }}>
-                  <Text style={{ fontSize: 16, lineHeight: 20, color: '#eee' }}>
-                    歌曲名称
-                  </Text>
-                  <Text
-                    style={{ fontSize: 12, lineHeight: 20, color: '#e4e4e4' }}>
-                    歌曲作者
-                  </Text>
-                </View>
-              </View>
+              </TouchableOpacity>
             );
           }}></FlatList>
       )}

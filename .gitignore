@@ -60,4 +60,8 @@ buck-out/
 
 # 本地配置文件
 android/.project
-android/.settings/org.eclipse.buildship.core.prefs
+android/app/.classpath
+android/app/.project
+org.eclipse.buildship.core.prefs
+temp/
+

@@ -37,6 +37,8 @@ MYAPP_RELEASE_KEY_PASSWORD=具体的密码
 # 生成 release 包
 cd android
 gradlew assembleRelease # 如果是Linux or Mac，则需要 ./gradlew assembleRelease
+# 也可执行执行：
+npm run build:android
 
 # 可以从如下地址找到部署包
 android/app/build/outputs/apk/release/app-release.apk
