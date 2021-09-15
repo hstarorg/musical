@@ -1,4 +1,9 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import {
   View,
   useColorScheme,
@@ -10,49 +15,32 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
 } from 'react-native';
-import RNFS from 'react-native-fs';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
-import { ScreenPropsBase } from '../../types';
+import { MusicInfo, ScreenPropsBase } from '../../types';
 import { fsExtra, nativeUtil } from '../../utils';
-import { audioManager } from '../../services';
+import { audioManager, musicService } from '../../services';
 
 export default (props: ScreenPropsBase) => {
   const { navigation } = props;
   const isDarkMode = useColorScheme() === 'dark';
-  const [musicList, setMusicList] = useState<RNFS.ReadDirItem[]>([]);
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const [musicList, setMusicList] = useState<MusicInfo[]>([]);
+
+  const loadMusicArr = () => {
+    musicService.queryMusicList().then(musicArr => {
+      console.log(musicArr, 'ma');
+      setMusicList(musicArr);
+    });
   };
 
-  const scanMusicList = useCallback(async () => {
-    const granted = await nativeUtil.requestPermissionAndroid(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    );
-    if (granted) {
-      fsExtra
-        .filterFiles(
-          RNFS.ExternalStorageDirectoryPath,
-          (item: RNFS.ReadDirItem) => {
-            return item.path.endsWith('.mp3');
-          },
-          true,
-        )
-        .then(files => {
-          console.log(files, 'files');
-          setMusicList(files);
-          Alert.alert('扫描完毕');
-        })
-        .catch(() => {
-          Alert.alert('异常了！');
-        });
-    } else {
-      Alert.alert('您未授权');
-    }
+  const scanMusicList = useCallback(() => {
+    musicService.scanAndStoreLocalMusics().then(() => {
+      loadMusicArr();
+    });
   }, []);
 
-  const handleMusicPress = useCallback((musicInfo: RNFS.ReadDirItem) => {
+  const handleMusicPress = useCallback((musicInfo: MusicInfo) => {
     audioManager
       .loadAsync(musicInfo.path)
       .then(() => {
@@ -78,6 +66,10 @@ export default (props: ScreenPropsBase) => {
       },
     });
   }, [navigation]);
+
+  useEffect(() => {
+    loadMusicArr();
+  }, []);
 
   return (
     <View style={{ backgroundColor: '#212121' }}>
@@ -106,7 +98,7 @@ export default (props: ScreenPropsBase) => {
             return (
               <TouchableOpacity onPress={() => handleMusicPress(musicInfo)}>
                 <View
-                  key={Math.random().toString()}
+                  key={musicInfo.id!}
                   style={{
                     flexDirection: 'row',
                     height: 80,
