@@ -1,44 +1,42 @@
 import Sound from 'react-native-sound';
+import { Audio } from 'expo-av';
 
 export class SoundManager {
-  sound: Sound | null = null;
-  setSound(soundPath: string) {
+  sound: Audio.Sound | null = null;
+
+  loadAsync(soundPath: string) {
     if (this.sound) {
       this.stop();
     }
-    return new Promise((resolve, reject) => {
-      this.sound = new Sound(soundPath, Sound.MAIN_BUNDLE, err => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(this.sound);
-      });
+    this.sound = new Audio.Sound();
+    return this.sound.loadAsync({ uri: soundPath }).then(() => {
+      return this.sound;
     });
   }
 
   play() {
-    this.sound?.play();
+    return this.sound?.playAsync();
   }
 
   pause() {
-    this.sound?.pause();
+    return this.sound?.pauseAsync();
   }
 
   stop() {
-    this.sound?.stop(() => {
-      this.sound?.release();
-    });
+    return this.sound?.stopAsync();
   }
 
   getDuration() {
-    return this.sound?.getDuration() || 0;
+    return this.sound?.getStatusAsync().then(info => {
+      return info.isLoaded ? info.durationMillis : 0;
+    });
   }
 
   getCurrentTime() {
-    return new Promise(resolve => {
-      this.sound?.getCurrentTime((seconds, isPlaying) => {
-        resolve({ seconds, isPlaying });
-      });
+    return this.sound?.getStatusAsync().then(info => {
+      return info.isLoaded
+        ? { seconds: info.positionMillis, isPlaying: info.isPlaying }
+        : { seconds: 0, isPlaying: false };
     });
   }
 }

@@ -54,7 +54,7 @@ export default (props: ScreenPropsBase) => {
 
   const handleMusicPress = useCallback((musicInfo: RNFS.ReadDirItem) => {
     soundManager
-      .setSound(musicInfo.path)
+      .loadAsync(musicInfo.path)
       .then(() => {
         soundManager.play();
       })

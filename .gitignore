@@ -64,4 +64,4 @@ android/app/.classpath
 android/app/.project
 org.eclipse.buildship.core.prefs
 temp/
-
+generated/

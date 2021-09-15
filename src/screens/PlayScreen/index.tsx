@@ -19,8 +19,10 @@ export default (props: ScreenPropsBase) => {
   const [playStatus, setPlayStatus] = useState<'pause' | 'playing'>('pause');
 
   useEffect(() => {
-    soundManager.setSound(m01).then(() => {
-      setTotalDuration(soundManager.getDuration());
+    soundManager.loadAsync(m01).then(() => {
+      soundManager.getDuration()?.then(value => {
+        setTotalDuration(value!);
+      });
     });
 
     return () => {
@@ -30,7 +32,7 @@ export default (props: ScreenPropsBase) => {
 
   useEffect(() => {
     let timer = setInterval(() => {
-      soundManager.getCurrentTime().then((result: any) => {
+      soundManager.getCurrentTime()?.then((result: any) => {
         setCurrentTime(result.seconds);
       });
     }, 1000);
