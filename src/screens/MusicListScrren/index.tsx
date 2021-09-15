@@ -16,7 +16,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
 import { ScreenPropsBase } from '../../types';
 import { fsExtra, nativeUtil } from '../../utils';
-import { soundManager } from '../../services';
+import { audioManager } from '../../services';
 
 export default (props: ScreenPropsBase) => {
   const { navigation } = props;
@@ -53,10 +53,10 @@ export default (props: ScreenPropsBase) => {
   }, []);
 
   const handleMusicPress = useCallback((musicInfo: RNFS.ReadDirItem) => {
-    soundManager
+    audioManager
       .loadAsync(musicInfo.path)
       .then(() => {
-        soundManager.play();
+        return audioManager.playAsync();
       })
       .catch(err => {
         Alert.alert('err' + err.message);

@@ -8,7 +8,7 @@ import { ScreenPropsBase } from '../../types';
 import styles from './styles';
 import { musicUtil } from '../../utils';
 import { htmlContent } from './htmlContent';
-import { soundManager } from '../../services';
+import { audioManager } from '../../services';
 
 const m01 = require('../../assets/02.mp3');
 
@@ -19,20 +19,20 @@ export default (props: ScreenPropsBase) => {
   const [playStatus, setPlayStatus] = useState<'pause' | 'playing'>('pause');
 
   useEffect(() => {
-    soundManager.loadAsync(m01).then(() => {
-      soundManager.getDuration()?.then(value => {
+    audioManager.loadAsync(m01).then(() => {
+      audioManager.getDuration()?.then(value => {
         setTotalDuration(value!);
       });
     });
 
     return () => {
-      soundManager.stop();
+      audioManager.stop();
     };
   }, []);
 
   useEffect(() => {
     let timer = setInterval(() => {
-      soundManager.getCurrentTime()?.then((result: any) => {
+      audioManager.getCurrentTime()?.then((result: any) => {
         setCurrentTime(result.seconds);
       });
     }, 1000);
@@ -43,10 +43,10 @@ export default (props: ScreenPropsBase) => {
 
   const doPlay = useCallback(() => {
     if (playStatus === 'pause') {
-      soundManager.play();
+      audioManager.playAsync();
       setPlayStatus('playing');
     } else if (playStatus === 'playing') {
-      soundManager.pause();
+      audioManager.pause();
       setPlayStatus('pause');
     }
   }, [playStatus]);
