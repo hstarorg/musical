@@ -13,13 +13,10 @@ import {
   Text,
   Alert,
   TouchableOpacity,
-  PermissionsAndroid,
 } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
 import { MusicInfo, ScreenPropsBase } from '../../types';
-import { fsExtra, nativeUtil } from '../../utils';
 import { audioManager, musicService } from '../../services';
 
 export default (props: ScreenPropsBase) => {
@@ -29,7 +26,6 @@ export default (props: ScreenPropsBase) => {
 
   const loadMusicArr = () => {
     musicService.queryMusicList().then(musicArr => {
-      console.log(musicArr, 'ma');
       setMusicList(musicArr);
     });
   };
@@ -45,6 +41,9 @@ export default (props: ScreenPropsBase) => {
       .loadAsync(musicInfo.path)
       .then(() => {
         return audioManager.playAsync();
+      })
+      .then(() => {
+        return musicService.setCurrentMusic(String(musicInfo.id));
       })
       .catch(err => {
         Alert.alert('err' + err.message);

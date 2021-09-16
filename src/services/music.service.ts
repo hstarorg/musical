@@ -4,12 +4,16 @@ import { MusicInfo } from '../types';
 import { fsExtra, nativeUtil } from '../utils';
 import { SqliteHelper } from './SqliteHelper';
 
+const ConfigKeys = {
+  CurrentMusicKey: 'CurrentMusic',
+};
+
 class MusicService {
   private db: SqliteHelper;
   constructor() {
     this.db = new SqliteHelper();
     this.tryInit().then(result => {
-      console.log(result);
+      console.log('init done', result);
     });
   }
 
@@ -21,14 +25,58 @@ class MusicService {
   }
 
   private async tryInit() {
-    const createTableSql = `
+    const createSysConfigSql = `
+    CREATE TABLE IF NOT EXISTS [sys_config] (
+      [id] integer COLLATE BINARY NOT NULL PRIMARY KEY AUTOINCREMENT, 
+      [key] varchar(50) COLLATE BINARY UNIQUE NOT NULL, 
+      [value] varchar(200) COLLATE BINARY NOT NULL
+    );
+    `;
+    const createMusicSql = `
     CREATE TABLE IF NOT EXISTS [music] (
       [id] integer COLLATE BINARY NOT NULL PRIMARY KEY AUTOINCREMENT, 
       [name] varchar(200) COLLATE BINARY NOT NULL, 
-      [path] varchar(200) COLLATE BINARY NOT NULL
+      [path] varchar(2000) COLLATE BINARY NOT NULL
     );
     `;
-    return await this.db.execute(createTableSql);
+    return await Promise.all([
+      this.db.execute(createSysConfigSql),
+      this.db.execute(createMusicSql),
+    ]);
+  }
+
+  /**
+   * 获取当前音乐
+   * @returns
+   */
+  async getCurrentMusic() {
+    const sql = `
+    SELECT t2.* FROM sys_config AS t1
+    JOIN music AS t2 ON t1.value = t2.id
+    WHERE t1.key = '${ConfigKeys.CurrentMusicKey}';
+    `;
+    return await this.db.executeScalar(sql);
+  }
+
+  /**
+   * 设置当前选中的音乐
+   * @param musicId
+   * @returns
+   */
+  async setCurrentMusic(musicId: string) {
+    // 此 sql 为更新主键，不太使用，注意：第一个字段需要是unique
+    const sql = `
+    INSERT OR REPLACE INTO [sys_config]([key], value)
+    VALUES('${ConfigKeys.CurrentMusicKey}', ?);
+    `;
+
+    // 此 sql 需要 CONFLICT 的字段是 unique
+    // const sql = `
+    // INSERT INTO sys_config([key], value)
+    // VALUES('${ConfigKeys.CurrentMusicKey}', ?) ON CONFLICT([key]) DO UPDATE
+    // SET value = excluded.value;
+    // `;
+    return await this.db.executeNonQuery(sql, [musicId]);
   }
 
   /**

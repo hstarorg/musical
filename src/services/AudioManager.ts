@@ -6,7 +6,7 @@ class AudioManager {
   async loadAsync(soundPath: string) {
     // 先停止
     if (this.playbackObject) {
-      await this.stop();
+      await this.stopAsync();
     }
     this.playbackObject = new Audio.Sound();
     const source =
@@ -20,26 +20,20 @@ class AudioManager {
     return this.playbackObject?.playAsync();
   }
 
-  pause() {
+  pauseAsync() {
     return this.playbackObject?.pauseAsync();
   }
 
-  stop() {
+  stopAsync() {
     return this.playbackObject?.stopAsync();
   }
 
-  getDuration() {
-    return this.playbackObject?.getStatusAsync().then(info => {
-      return info.isLoaded ? info.durationMillis : 0;
-    });
-  }
-
-  getCurrentTime() {
-    return this.playbackObject?.getStatusAsync().then(info => {
-      return info.isLoaded
-        ? { seconds: info.positionMillis, isPlaying: info.isPlaying }
-        : { seconds: 0, isPlaying: false };
-    });
+  async getAudioStatus() {
+    const status = await this.playbackObject?.getStatusAsync();
+    if (status?.isLoaded) {
+      return status;
+    }
+    return void 0;
   }
 }
 

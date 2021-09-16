@@ -4,55 +4,76 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Bar as ProgressBar } from 'react-native-progress';
 import { WebView } from 'react-native-webview';
-import { ScreenPropsBase } from '../../types';
+import { MusicInfo, ScreenPropsBase } from '../../types';
 import styles from './styles';
 import { musicUtil } from '../../utils';
 import { htmlContent } from './htmlContent';
-import { audioManager } from '../../services';
-
-const m01 = require('../../assets/02.mp3');
+import { audioManager, musicService } from '../../services';
+import { AVPlaybackStatus } from 'expo-av';
 
 export default (props: ScreenPropsBase) => {
   const { navigation } = props;
-  const [totalDuration, setTotalDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [playStatus, setPlayStatus] = useState<'pause' | 'playing'>('pause');
+  const [audioStatus, setAudioStatus] = useState<
+    AVPlaybackStatus & { isLoaded: true }
+  >();
+  const [currentMusic, setCurrentMusic] = useState<MusicInfo>();
 
+  function updateStatus() {
+    // 设置总时长
+    audioManager.getAudioStatus()?.then(value => {
+      setAudioStatus(value);
+    });
+  }
   useEffect(() => {
-    audioManager.loadAsync(m01).then(() => {
-      audioManager.getDuration()?.then(value => {
-        setTotalDuration(value!);
+    musicService.getCurrentMusic().then((musicInfo: MusicInfo) => {
+      setCurrentMusic(musicInfo);
+      // 加载音乐
+      audioManager.loadAsync(musicInfo.path).then(() => {
+        updateStatus();
       });
     });
 
     return () => {
-      audioManager.stop();
+      audioManager.stopAsync();
     };
   }, []);
 
   useEffect(() => {
-    let timer = setInterval(() => {
-      audioManager.getCurrentTime()?.then((result: any) => {
-        setCurrentTime(result.seconds);
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      musicService.getCurrentMusic().then((musicInfo: MusicInfo) => {
+        setCurrentMusic(musicInfo);
       });
+      updateStatus();
+    });
+    return () => {
+      unsubscribeFocus();
+    };
+  }, [navigation]);
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      updateStatus();
     }, 1000);
     return () => {
       clearInterval(timer);
     };
-  }, [totalDuration]);
+  }, []);
 
   const doPlay = useCallback(() => {
-    if (playStatus === 'pause') {
+    if (audioStatus?.isPlaying) {
+      audioManager.pauseAsync();
+    } else {
       audioManager.playAsync();
-      setPlayStatus('playing');
-    } else if (playStatus === 'playing') {
-      audioManager.pause();
-      setPlayStatus('pause');
     }
-  }, [playStatus]);
+  }, [audioStatus]);
 
   // 进度条
-  const progress = currentTime / totalDuration || 0;
+  let progress = 0;
+  if (audioStatus) {
+    progress = audioStatus.isLoaded
+      ? audioStatus.positionMillis / (audioStatus.durationMillis || 1)
+      : 0;
+  }
 
   return (
     <View style={styles.playScreen}>
@@ -76,17 +97,17 @@ export default (props: ScreenPropsBase) => {
       </View>
       <View style={styles.infoArea}>
         <View>
-          <Text style={styles.mainTitle}>这是歌曲主标题</Text>
+          <Text style={styles.mainTitle}>{currentMusic?.name}</Text>
         </View>
         <View>
-          <Text style={styles.subTitle}>这是歌曲副标题</Text>
+          <Text style={styles.subTitle}>{currentMusic?.path}</Text>
         </View>
       </View>
       <View style={styles.controlArea}>
         <View style={styles.progressBarArea}>
           <View style={{ width: 50 }}>
             <Text style={{ color: '#fff' }}>
-              {musicUtil.duration2TimeStr(currentTime)}
+              {musicUtil.duration2TimeStr(audioStatus?.positionMillis)}
             </Text>
           </View>
           <ProgressBar
@@ -98,7 +119,7 @@ export default (props: ScreenPropsBase) => {
           />
           <View style={{ width: 50 }}>
             <Text style={{ color: '#fff', textAlign: 'right' }}>
-              {musicUtil.duration2TimeStr(totalDuration)}
+              {musicUtil.duration2TimeStr(audioStatus?.durationMillis)}
             </Text>
           </View>
         </View>
@@ -136,7 +157,7 @@ export default (props: ScreenPropsBase) => {
           <EntypoIcon.Button
             onPress={doPlay}
             name={
-              playStatus === 'pause' ? 'controller-play' : 'controller-paus'
+              audioStatus?.isPlaying ? 'controller-paus' : 'controller-play'
             }
             style={{
               width: 80,
@@ -167,7 +188,7 @@ export default (props: ScreenPropsBase) => {
           <MaterialCommunityIcon.Button
             name="playlist-music"
             onPress={() => {
-              // alert('aaa');
+              navigation.navigate('MusicListScrren');
             }}
             style={{
               height: 80,

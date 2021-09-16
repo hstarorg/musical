@@ -1,6 +1,11 @@
 export const musicUtil = {
-  duration2TimeStr(duration: number) {
-    duration = Math.ceil(duration);
+  /**
+   *
+   * @param duration 毫秒
+   * @returns
+   */
+  duration2TimeStr(duration: number | undefined) {
+    duration = Math.ceil((duration || 0) / 1000);
     const minutes = Math.floor(duration / 60);
     const seconds = duration - minutes * 60;
     return `${this.padLeft(minutes, '0', 2)}:${this.padLeft(seconds, '0', 2)}`;
