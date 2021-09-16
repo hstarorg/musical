@@ -32,7 +32,8 @@ allprojects {
             url("$rootDir/../node_modules/jsc-android/dist")
         }
         // 安装 expo-av / com.google.android.exoplayer 时需要使用到
-        jcenter()
+        // jcenter()
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
       
         google()
 

@@ -43,3 +43,10 @@ npm run build:android
 # 可以从如下地址找到部署包
 android/app/build/outputs/apk/release/app-release.apk
 ```
+
+## 其他
+
+```bash
+# 清除 gradle 缓存
+gradlew cleanBuildCache
+```
