@@ -45,6 +45,46 @@ class MusicService {
     ]);
   }
 
+  async updateCurrentMusic(
+    musicInfo: MusicInfo,
+    type: 'next' | 'prev',
+    sortType: 'random' | 'asc',
+  ) {
+    const sql = `
+    SELECT (
+      SELECT id FROM music WHERE id < ? ORDER BY id DESC LIMIT 1
+    ) AS prevVal, (
+      SELECT id FROM music WHERE id > ? LIMIT 1
+    ) AS nextVal, (
+      SELECT id FROM music LIMIT 1
+    ) AS firstVal, (
+      SELECT id FROM music ORDER BY id DESC LIMIT 1
+    ) AS lastVal, (
+      SELECT id FROM music ORDER BY RANDOM() LIMIT 1
+    ) AS randomVal
+    `;
+    const result: {
+      prevVal: number;
+      nextVal: number;
+      firstVal: number;
+      lastVal: number;
+      randomVal: number;
+    } = await this.db.executeScalar(sql, [musicInfo.id, musicInfo.id]);
+    // 设置下一首歌曲
+    let newMusicId;
+    // 随机时，自动选择一首
+    if (sortType === 'random') {
+      newMusicId = result.randomVal;
+    } else {
+      // 非随机时，则顺序选择
+      newMusicId =
+        type === 'next'
+          ? result.nextVal || result.firstVal
+          : result.prevVal || result.lastVal;
+    }
+    await this.setCurrentMusic(String(newMusicId));
+  }
+
   /**
    * 获取当前音乐
    * @returns

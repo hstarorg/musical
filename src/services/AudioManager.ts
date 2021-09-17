@@ -11,6 +11,8 @@ class AudioManager {
     // 先停止
     if (this.playbackObject) {
       await this.stopAsync();
+      // TODO: 加这个会报错，待分析原因
+      // await this.tryUnloadAsync();
     }
     this.playbackObject = new Audio.Sound();
     const source =
@@ -38,6 +40,14 @@ class AudioManager {
       return status;
     }
     return void 0;
+  }
+
+  private async tryUnloadAsync() {
+    // unload 需要检查
+    const status = await this.playbackObject?.getStatusAsync();
+    if (status?.isLoaded) {
+      await this.playbackObject?.unloadAsync();
+    }
   }
 }
 

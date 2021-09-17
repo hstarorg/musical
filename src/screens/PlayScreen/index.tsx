@@ -11,11 +11,18 @@ import { htmlContent } from './htmlContent';
 import { audioManager, musicService } from '../../services';
 import { AVPlaybackStatus } from 'expo-av';
 
+const PlaySortMap = {
+  random: 'shuffle-variant',
+  asc: 'arrow-right',
+};
+
 export default (props: ScreenPropsBase) => {
   const { navigation } = props;
   const [audioStatus, setAudioStatus] = useState<
     AVPlaybackStatus & { isLoaded: true }
   >();
+  const [playSortType, setPlaySortType] =
+    useState<keyof typeof PlaySortMap>('asc');
   const [currentMusic, setCurrentMusic] = useState<MusicInfo>();
 
   function updateStatus() {
@@ -24,15 +31,26 @@ export default (props: ScreenPropsBase) => {
       setAudioStatus(value);
     });
   }
-  useEffect(() => {
+
+  function loadMusic(autoPlaying: boolean = false) {
     musicService.getCurrentMusic().then((musicInfo: MusicInfo) => {
       setCurrentMusic(musicInfo);
       // 加载音乐
-      audioManager.loadAsync(musicInfo.path).then(() => {
-        updateStatus();
-      });
+      audioManager
+        .loadAsync(musicInfo.path)
+        .then(() => {
+          if (autoPlaying) {
+            return audioManager.playAsync();
+          }
+        })
+        .then(() => {
+          updateStatus();
+        });
     });
+  }
 
+  useEffect(() => {
+    loadMusic();
     return () => {
       audioManager.stopAsync();
     };
@@ -66,6 +84,30 @@ export default (props: ScreenPropsBase) => {
       audioManager.playAsync();
     }
   }, [audioStatus]);
+
+  const changePrevMusic = useCallback(() => {
+    musicService
+      .updateCurrentMusic(currentMusic!, 'prev', playSortType)
+      .then(() => {
+        loadMusic(audioStatus?.isPlaying);
+      });
+  }, [currentMusic, audioStatus, playSortType]);
+
+  const changeNextMusic = useCallback(() => {
+    musicService
+      .updateCurrentMusic(currentMusic!, 'next', playSortType)
+      .then(() => {
+        loadMusic(audioStatus?.isPlaying);
+      });
+  }, [currentMusic, audioStatus, playSortType]);
+
+  const togglePlaySortType = useCallback(() => {
+    const nextPlaySortType = musicUtil.findNextKey(
+      Object.keys(PlaySortMap),
+      playSortType,
+    );
+    setPlaySortType(nextPlaySortType as any);
+  }, [playSortType]);
 
   // 进度条
   let progress = 0;
@@ -125,10 +167,8 @@ export default (props: ScreenPropsBase) => {
         </View>
         <View style={styles.controlBtnArea}>
           <MaterialCommunityIcon.Button
-            name="shuffle-variant"
-            onPress={() => {
-              // alert('aaa');
-            }}
+            name={PlaySortMap[playSortType]}
+            onPress={togglePlaySortType}
             style={{
               height: 80,
               padding: 0,
@@ -140,9 +180,7 @@ export default (props: ScreenPropsBase) => {
             size={20}
           />
           <EntypoIcon.Button
-            onPress={() => {
-              // alert('aaa');
-            }}
+            onPress={changePrevMusic}
             name="controller-jump-to-start"
             style={{
               width: 60,
@@ -172,9 +210,7 @@ export default (props: ScreenPropsBase) => {
             size={40}
           />
           <EntypoIcon.Button
-            onPress={() => {
-              // alert('aaa');
-            }}
+            onPress={changeNextMusic}
             name="controller-next"
             style={{
               width: 60,

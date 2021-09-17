@@ -21,4 +21,13 @@ export const musicUtil = {
     const tmpStr = `${new Array(len).fill(padChar).join('')}${str}`;
     return tmpStr.slice(tmpStr.length - len);
   },
+
+  findNextKey(keys: string[], currentKey: string) {
+    const curIdx = keys.findIndex(key => key === currentKey);
+    let nextIdx = curIdx + 1;
+    if (nextIdx >= keys.length) {
+      nextIdx = 0;
+    }
+    return keys[nextIdx];
+  },
 };
