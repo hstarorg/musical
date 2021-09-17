@@ -133,7 +133,7 @@ export default (props: ScreenPropsBase) => {
       <View style={styles.graphArea}>
         <WebView
           // style={{ backgroundColor: 'red' }}
-          source={{ html: htmlContent }}
+          source={{ html: '<h1>Hi，研发中，请稍后</h1>' }}
           javaScriptEnabled={true}
         />
       </View>
