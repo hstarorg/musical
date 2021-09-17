@@ -3,6 +3,10 @@ import { Audio } from 'expo-av';
 class AudioManager {
   playbackObject: Audio.Sound | null = null;
 
+  constructor() {
+    Audio.setAudioModeAsync({ staysActiveInBackground: true });
+  }
+
   async loadAsync(soundPath: string) {
     // 先停止
     if (this.playbackObject) {
