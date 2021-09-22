@@ -16,6 +16,8 @@ const PlaySortMap = {
   asc: 'arrow-right',
 };
 
+let autoChanging = false;
+
 export default (props: ScreenPropsBase) => {
   const { navigation } = props;
   const [audioStatus, setAudioStatus] = useState<
@@ -28,7 +30,21 @@ export default (props: ScreenPropsBase) => {
   function updateStatus() {
     // 设置总时长
     audioManager.getAudioStatus()?.then(value => {
+      console.log(value);
       setAudioStatus(value);
+      // 如果没有点击停止，且歌曲放完了，则需要挑选另外一首
+      if (value?.shouldPlay && !value.isPlaying && !autoChanging) {
+        autoChanging = true;
+        // 自动切换下一首
+        musicService
+          .updateCurrentMusic(currentMusic!, 'next', playSortType)
+          .then(() => {
+            loadMusic(value?.shouldPlay);
+          })
+          .finally(() => {
+            autoChanging = false;
+          });
+      }
     });
   }
 
@@ -102,7 +118,6 @@ export default (props: ScreenPropsBase) => {
   }, [currentMusic, audioStatus, playSortType]);
 
   const handleProgressChange = useCallback(value => {
-    console.log(value);
     audioManager.setPositionAsync(value);
   }, []);
 
@@ -121,8 +136,6 @@ export default (props: ScreenPropsBase) => {
     progress = Math.floor(audioStatus.positionMillis / 1000);
     total = Math.floor((audioStatus.durationMillis || 0) / 1000);
   }
-
-  console.log(progress, total);
 
   return (
     <View style={styles.playScreen}>
