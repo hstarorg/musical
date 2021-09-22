@@ -1566,6 +1566,13 @@
   "resolved" "https://registry.npm.taobao.org/@react-native-community/eslint-plugin/download/@react-native-community/eslint-plugin-1.1.0.tgz"
   "version" "1.1.0"
 
+"@react-native-community/slider@^4.1.7":
+  "integrity" "sha512-zVcxi3chX/Je/3lo8jI/83VpY6DL2h+JWNV8sg6rkxjRTau/8DfM/e98RymH0ujejBkuYX342IKNnxOHRK6KbQ=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/slider/-/slider-4.1.7.tgz"
+  "version" "4.1.7"
+  dependencies:
+    "flow-bin" "0.113.0"
+
 "@react-native-windows/cli@0.65.0":
   "integrity" "sha512-CPsfZzefm4wjpgxlTaKvtk0ah+ro94KTCbCn9nRTqckaU8MG0ypfmZiAGFoSESIdBrhnpoVt4zxg4hPCD9lIuw=="
   "resolved" "https://registry.npmjs.org/@react-native-windows/cli/-/cli-0.65.0.tgz"
@@ -3980,6 +3987,11 @@
   "integrity" "sha1-ZL/tXLaP48p4s+shStl7Y77c5WE="
   "resolved" "https://registry.nlark.com/flatted/download/flatted-3.2.2.tgz"
   "version" "3.2.2"
+
+"flow-bin@0.113.0":
+  "integrity" "sha512-76uE2LGNe50wm+Jup8Np4FBcMbyy5V2iE+K25PPIYLaEMGHrL1jnQfP9L0hTzA5oh2ZJlexRLMlaPqIYIKH9nw=="
+  "resolved" "https://registry.npmjs.org/flow-bin/-/flow-bin-0.113.0.tgz"
+  "version" "0.113.0"
 
 "flow-parser@^0.121.0":
   "integrity" "sha1-n5iY6uyRqffDI+npktgatcWOYY8="

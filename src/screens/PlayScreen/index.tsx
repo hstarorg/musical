@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Bar as ProgressBar } from 'react-native-progress';
+import Slider from '@react-native-community/slider';
 import { WebView } from 'react-native-webview';
 import { MusicInfo, ScreenPropsBase } from '../../types';
 import styles from './styles';
@@ -101,6 +101,11 @@ export default (props: ScreenPropsBase) => {
       });
   }, [currentMusic, audioStatus, playSortType]);
 
+  const handleProgressChange = useCallback(value => {
+    console.log(value);
+    audioManager.setPositionAsync(value);
+  }, []);
+
   const togglePlaySortType = useCallback(() => {
     const nextPlaySortType = musicUtil.findNextKey(
       Object.keys(PlaySortMap),
@@ -111,11 +116,13 @@ export default (props: ScreenPropsBase) => {
 
   // 进度条
   let progress = 0;
-  if (audioStatus) {
-    progress = audioStatus.isLoaded
-      ? audioStatus.positionMillis / (audioStatus.durationMillis || 1)
-      : 0;
+  let total = 0;
+  if (audioStatus?.isLoaded) {
+    progress = Math.floor(audioStatus.positionMillis / 1000);
+    total = Math.floor((audioStatus.durationMillis || 0) / 1000);
   }
+
+  console.log(progress, total);
 
   return (
     <View style={styles.playScreen}>
@@ -152,12 +159,23 @@ export default (props: ScreenPropsBase) => {
               {musicUtil.duration2TimeStr(audioStatus?.positionMillis)}
             </Text>
           </View>
-          <ProgressBar
-            progress={progress}
-            width={null}
-            height={6}
-            color="#fff"
-            style={{ flex: 1, marginTop: 6, marginBottom: 6 }}
+          <Slider
+            value={progress}
+            minimumValue={0}
+            maximumValue={total}
+            step={1}
+            onSlidingComplete={handleProgressChange}
+            // 已选中部分背景色
+            minimumTrackTintColor="#fff"
+            // 总量背景色
+            // maximumTrackTintColor="blue"
+            // 小圆点颜色
+            // thumbTintColor="#fff"
+            style={{
+              flex: 1,
+              marginTop: 6,
+              height: 7,
+            }}
           />
           <View style={{ width: 50 }}>
             <Text style={{ color: '#fff', textAlign: 'right' }}>

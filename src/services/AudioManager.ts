@@ -42,6 +42,15 @@ class AudioManager {
     return void 0;
   }
 
+  /**
+   * 设置到指定位置
+   * @param value
+   * @returns
+   */
+  async setPositionAsync(value: number) {
+    return await this.playbackObject?.setPositionAsync(value * 1000);
+  }
+
   private async tryUnloadAsync() {
     // unload 需要检查
     const status = await this.playbackObject?.getStatusAsync();
