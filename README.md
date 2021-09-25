@@ -35,6 +35,9 @@ MYAPP_RELEASE_STORE_PASSWORD=具体的密码
 MYAPP_RELEASE_KEY_PASSWORD=具体的密码
 
 # 生成 release 包
+# 注意：如果要执行构建，那么需要满足两个条件
+# 1. 需要生成密钥文件，并放在 src/android/app 下，密钥文件必须是 musical-release-key.keystore
+# 2. 在 src/android/gradle.properties 中设置“配置密钥”中的内容，并设置好具体的密码
 cd android
 gradlew assembleRelease # 如果是Linux or Mac，则需要 ./gradlew assembleRelease
 # 也可执行执行：

@@ -30,7 +30,6 @@ export default (props: ScreenPropsBase) => {
   function updateStatus() {
     // 设置总时长
     audioManager.getAudioStatus()?.then(value => {
-      console.log(value);
       setAudioStatus(value);
       // 如果没有点击停止，且歌曲放完了，则需要挑选另外一首
       if (value?.shouldPlay && !value.isPlaying && !autoChanging) {
