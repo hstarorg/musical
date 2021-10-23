@@ -15,7 +15,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import styles from './styles';
 import { MusicInfo, ScreenPropsBase } from '../../types';
 import { audioManager, musicService } from '../../services';
 

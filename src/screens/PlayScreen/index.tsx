@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
@@ -26,6 +26,7 @@ export default (props: ScreenPropsBase) => {
   const [playSortType, setPlaySortType] =
     useState<keyof typeof PlaySortMap>('asc');
   const [currentMusic, setCurrentMusic] = useState<MusicInfo>();
+  const [refreshCtrl, setRefreshCtrl] = useState({});
 
   function updateStatus() {
     // 设置总时长
@@ -59,7 +60,7 @@ export default (props: ScreenPropsBase) => {
           }
         })
         .then(() => {
-          updateStatus();
+          setRefreshCtrl({});
         });
     });
   }
@@ -76,7 +77,7 @@ export default (props: ScreenPropsBase) => {
       musicService.getCurrentMusic().then((musicInfo: MusicInfo) => {
         setCurrentMusic(musicInfo);
       });
-      updateStatus();
+      setRefreshCtrl({});
     });
     return () => {
       unsubscribeFocus();
@@ -84,8 +85,12 @@ export default (props: ScreenPropsBase) => {
   }, [navigation]);
 
   useEffect(() => {
+    updateStatus();
+  }, [refreshCtrl]);
+
+  useEffect(() => {
     let timer = setInterval(() => {
-      updateStatus();
+      setRefreshCtrl({});
     }, 1000);
     return () => {
       clearInterval(timer);

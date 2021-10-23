@@ -95,7 +95,8 @@ class MusicService {
     JOIN music AS t2 ON t1.value = t2.id
     WHERE t1.key = '${ConfigKeys.CurrentMusicKey}';
     `;
-    return await this.db.executeScalar(sql);
+    const reslut = await this.db.executeScalar(sql);
+    return reslut;
   }
 
   /**
