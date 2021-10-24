@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text, Alert } from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Slider from '@react-native-community/slider';
@@ -8,7 +9,7 @@ import { MusicInfo, ScreenPropsBase } from '../../types';
 import styles from './styles';
 import { musicUtil } from '../../utils';
 import { htmlContent } from './htmlContent';
-import { audioManager, musicService } from '../../services';
+import { AMEventNames, audioManager, musicService } from '../../services';
 import { AVPlaybackStatus } from 'expo-av';
 
 const PlaySortMap = {
@@ -89,11 +90,11 @@ export default (props: ScreenPropsBase) => {
   }, [refreshCtrl]);
 
   useEffect(() => {
-    let timer = setInterval(() => {
+    let timer = BackgroundTimer.setInterval(() => {
       setRefreshCtrl({});
     }, 1000);
     return () => {
-      clearInterval(timer);
+      BackgroundTimer.clearInterval(timer);
     };
   }, []);
 

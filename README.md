@@ -8,7 +8,9 @@ A musical player for myself. Only play local musics.
 
 ```js
 // 路由库（https://reactnavigation.org/）
-react - navigation;
+react-navigation;
+// 定时器（https://github.com/ocetnik/react-native-background-timer）
+react-native-background-timer
 ```
 
 ## Connect to devices

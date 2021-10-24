@@ -1,4 +1,9 @@
-import { Audio } from 'expo-av';
+import { Audio, AVPlaybackStatus } from 'expo-av';
+import { eventBus } from '../utils';
+
+export enum AMEventNames {
+  PlaybackStatusUpdate = 'PlaybackStatusUpdate',
+}
 
 class AudioManager {
   playbackObject: Audio.Sound | null = null;
@@ -15,11 +20,23 @@ class AudioManager {
       // await this.tryUnloadAsync();
     }
     this.playbackObject = new Audio.Sound();
+    this.playbackObject.setOnPlaybackStatusUpdate(
+      (status: AVPlaybackStatus) => {
+        eventBus.emit(AMEventNames.PlaybackStatusUpdate, status);
+      },
+    );
     const source =
       typeof soundPath === 'number' ? soundPath : { uri: soundPath };
     return this.playbackObject.loadAsync(source).then(() => {
       return this.playbackObject;
     });
+  }
+
+  on(eventName: AMEventNames, handler: (data: AVPlaybackStatus) => void) {
+    eventBus.on(eventName, handler);
+    return function unHandler() {
+      eventBus.off(eventName, handler);
+    };
   }
 
   playAsync() {
