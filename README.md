@@ -13,6 +13,10 @@ react-navigation;
 react-native-background-timer
 ```
 
+## react-native 升级工具
+
+> https://react-native-community.github.io/upgrade-helper/
+
 ## Connect to devices
 
 ```bash
