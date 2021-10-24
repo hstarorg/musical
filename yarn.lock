@@ -1635,6 +1635,11 @@
   "resolved" "https://registry.nlark.com/@react-native/polyfills/download/@react-native/polyfills-1.0.0.tgz"
   "version" "1.0.0"
 
+"@react-native/polyfills@2.0.0":
+  "integrity" "sha512-K0aGNn1TjalKj+65D7ycc1//H9roAQ51GJVk5ZJQFb2teECGmzd86bYDC0aYdbRf7gtovescq4Zt6FR0tgXiHQ=="
+  "resolved" "https://registry.npmjs.org/@react-native/polyfills/-/polyfills-2.0.0.tgz"
+  "version" "2.0.0"
+
 "@react-navigation/bottom-tabs@^6.0.5":
   "integrity" "sha512-GytjJUzacHhe3C24HFrPl881Donrw2m+3JBNqMJALxMRjSA8yY72+l16bZR9YFsrywSHVSbjxIfzqtGb8rIVJg=="
   "resolved" "https://registry.npmjs.org/@react-navigation/bottom-tabs/-/bottom-tabs-6.0.5.tgz"
@@ -4310,6 +4315,11 @@
   "resolved" "https://registry.nlark.com/hermes-engine/download/hermes-engine-0.8.1.tgz?cache=0&sync_timestamp=1630568512237&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fhermes-engine%2Fdownload%2Fhermes-engine-0.8.1.tgz"
   "version" "0.8.1"
 
+"hermes-engine@~0.9.0":
+  "integrity" "sha512-r7U+Y4P2Qg/igFVZN+DpT7JFfXUn1MM4dFne8aW+cCrF6RRymof+VqrUHs1kl07j8h8V2CNesU19RKgWbr3qPw=="
+  "resolved" "https://registry.npmjs.org/hermes-engine/-/hermes-engine-0.9.0.tgz"
+  "version" "0.9.0"
+
 "hermes-parser@0.4.7":
   "integrity" "sha1-QQ9RKdVxg3hNIFoFOOb73PYUyeo="
   "resolved" "https://registry.nlark.com/hermes-parser/download/hermes-parser-0.4.7.tgz"
@@ -6725,7 +6735,7 @@
   "resolved" "https://registry.npm.taobao.org/range-parser/download/range-parser-1.2.1.tgz"
   "version" "1.2.1"
 
-"react-devtools-core@^4.6.0":
+"react-devtools-core@^4.13.0", "react-devtools-core@^4.6.0":
   "integrity" "sha1-BrI3Xc6nhYyVfRd5zCM50qCvIAo="
   "resolved" "https://registry.nlark.com/react-devtools-core/download/react-devtools-core-4.18.0.tgz?cache=0&sync_timestamp=1630538715763&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact-devtools-core%2Fdownload%2Freact-devtools-core-4.18.0.tgz"
   "version" "4.18.0"
@@ -6904,10 +6914,10 @@
     "whatwg-fetch" "^3.0.0"
     "ws" "^6.1.4"
 
-"react-native@*", "react-native@^0.0.0-0 || ^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || ^0.65.0 || 1000.0.0", "react-native@^0.65.0", "react-native@>=0.14.0", "react-native@>=0.47.0", "react-native@>=0.50.0", "react-native@>=0.60", "react-native@>=0.65.0-rc.0 || 0.0.0-*", "react-native@0.65.1":
-  "integrity" "sha1-vYzTE+DrjdzwjmHj+LVLf8MaQYw="
-  "resolved" "https://registry.nlark.com/react-native/download/react-native-0.65.1.tgz"
-  "version" "0.65.1"
+"react-native@*", "react-native@^0.0.0-0 || ^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || ^0.65.0 || 1000.0.0", "react-native@^0.65.0", "react-native@>=0.14.0", "react-native@>=0.47.0", "react-native@>=0.50.0", "react-native@>=0.60", "react-native@>=0.65.0-rc.0 || 0.0.0-*", "react-native@0.66.1":
+  "integrity" "sha512-BBvytmqlOLL+bRcO0jBiYfg16lYRsYDOC8/5E+bpnhb3EGtU+YCQAYfszw6JL7Hfy0ftnQNP5yj8pt+vqMHXIA=="
+  "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.66.1.tgz"
+  "version" "0.66.1"
   dependencies:
     "@jest/create-cache-key-function" "^27.0.1"
     "@react-native-community/cli" "^6.0.0"
@@ -6915,12 +6925,12 @@
     "@react-native-community/cli-platform-ios" "^6.0.0"
     "@react-native/assets" "1.0.0"
     "@react-native/normalize-color" "1.0.0"
-    "@react-native/polyfills" "1.0.0"
+    "@react-native/polyfills" "2.0.0"
     "abort-controller" "^3.0.0"
     "anser" "^1.4.9"
     "base64-js" "^1.1.2"
     "event-target-shim" "^5.0.1"
-    "hermes-engine" "~0.8.1"
+    "hermes-engine" "~0.9.0"
     "invariant" "^2.2.4"
     "jsc-android" "^250230.2.1"
     "metro-babel-register" "0.66.2"
@@ -6931,7 +6941,8 @@
     "pretty-format" "^26.5.2"
     "promise" "^8.0.3"
     "prop-types" "^15.7.2"
-    "react-devtools-core" "^4.6.0"
+    "react-devtools-core" "^4.13.0"
+    "react-native-codegen" "^0.0.7"
     "react-refresh" "^0.4.0"
     "regenerator-runtime" "^0.13.2"
     "scheduler" "^0.20.2"
