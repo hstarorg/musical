@@ -5742,7 +5742,7 @@
   dependencies:
     "uglify-es" "^3.1.9"
 
-"metro-react-native-babel-preset@^0.66.0", "metro-react-native-babel-preset@0.66.2":
+"metro-react-native-babel-preset@^0.66.2", "metro-react-native-babel-preset@0.66.2":
   "integrity" "sha1-/d689BOtTqYX1PR/fB2kAQUt5zQ="
   "resolved" "https://registry.nlark.com/metro-react-native-babel-preset/download/metro-react-native-babel-preset-0.66.2.tgz?cache=0&sync_timestamp=1626784205130&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmetro-react-native-babel-preset%2Fdownload%2Fmetro-react-native-babel-preset-0.66.2.tgz"
   "version" "0.66.2"
