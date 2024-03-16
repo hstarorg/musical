@@ -1,49 +1,49 @@
 /* eslint-disable react/jsx-key, react-native/no-inline-styles */
-import React from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
-import { Icon, ListItem, ListView, Text } from "../../../components"
-import { colors, spacing } from "../../../theme"
-import { Demo } from "../DemoShowroomScreen"
-import { DemoDivider } from "../DemoDivider"
-import { DemoUseCase } from "../DemoUseCase"
+import React from 'react';
+import { TextStyle, View, ViewStyle } from 'react-native';
+import { Icon, ListItem, ListView, Text } from '../../../components';
+import { colors, spacing } from '../../../theme';
+import { Demo } from '../DemoShowroomScreen';
+import { DemoDivider } from '../DemoDivider';
+import { DemoUseCase } from '../DemoUseCase';
 
 const listData =
   `Tempor Id Ea Aliqua Pariatur Aliquip. Irure Minim Voluptate Consectetur Consequat Sint Esse Proident Irure. Nostrud Elit Veniam Nostrud Excepteur Minim Deserunt Quis Dolore Velit Nulla Irure Voluptate Tempor. Occaecat Amet Laboris Nostrud Qui Do Quis Lorem Ex Elit Fugiat Deserunt. In Pariatur Excepteur Exercitation Ex Incididunt Qui Mollit Dolor Sit Non. Culpa Officia Minim Cillum Exercitation Voluptate Proident Laboris Et Est Reprehenderit Quis Pariatur Nisi`
-    .split(".")
-    .map((item) => item.trim())
+    .split('.')
+    .map((item) => item.trim());
 
 const $customLeft: ViewStyle = {
   backgroundColor: colors.error,
   flexGrow: 0,
   flexBasis: 60,
-  height: "100%",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  overflow: "hidden",
-}
+  height: '100%',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  overflow: 'hidden',
+};
 
 const $customTextStyle: TextStyle = {
   color: colors.error,
-}
+};
 
 const $customTouchableStyle: ViewStyle = {
   backgroundColor: colors.error,
-}
+};
 
 const $customContainerStyle: ViewStyle = {
   borderTopWidth: 5,
   borderTopColor: colors.palette.neutral100,
-}
+};
 
 const $listStyle: ViewStyle = {
   height: 148,
   paddingHorizontal: spacing.xs,
   backgroundColor: colors.palette.neutral200,
-}
+};
 
 export const DemoListItem: Demo = {
-  name: "ListItem",
-  description: "A styled row component that can be used in FlatList, SectionList, or by itself.",
+  name: 'ListItem',
+  description: 'A styled row component that can be used in FlatList, SectionList, or by itself.',
   data: [
     <DemoUseCase name="Height" description="The row can be different heights.">
       <ListItem topSeparator>Default height (56px)</ListItem>
@@ -61,10 +61,7 @@ export const DemoListItem: Demo = {
       </ListItem>
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="Separators"
-      description="The separator / divider is preconfigured and optional."
-    >
+    <DemoUseCase name="Separators" description="The separator / divider is preconfigured and optional.">
       <ListItem topSeparator>Only top separator</ListItem>
 
       <DemoDivider size={40} />
@@ -124,10 +121,7 @@ export const DemoListItem: Demo = {
       </ListItem>
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="Passing Content"
-      description="There are a few different ways to pass content."
-    >
+    <DemoUseCase name="Passing Content" description="There are a few different ways to pass content.">
       <ListItem topSeparator text="Via `text` prop - reprehenderit sint" />
       <ListItem topSeparator tx="demoShowroomScreen.demoViaTxProp" />
       <ListItem topSeparator>Children - mostrud mollit</ListItem>
@@ -135,9 +129,7 @@ export const DemoListItem: Demo = {
         <Text>
           <Text preset="bold">Nested children - proident veniam.</Text>
           {` `}
-          <Text preset="default">
-            Ullamco cupidatat officia exercitation velit non ullamco nisi..
-          </Text>
+          <Text preset="default">Ullamco cupidatat officia exercitation velit non ullamco nisi..</Text>
         </Text>
       </ListItem>
     </DemoUseCase>,
@@ -151,12 +143,7 @@ export const DemoListItem: Demo = {
           data={listData}
           estimatedItemSize={59}
           renderItem={({ item, index }) => (
-            <ListItem
-              text={item}
-              rightIcon="caretRight"
-              TextProps={{ numberOfLines: 1 }}
-              topSeparator={index !== 0}
-            />
+            <ListItem text={item} rightIcon="caretRight" TextProps={{ numberOfLines: 1 }} topSeparator={index !== 0} />
           )}
         />
       </View>
@@ -167,11 +154,7 @@ export const DemoListItem: Demo = {
         Styled Text
       </ListItem>
 
-      <ListItem
-        topSeparator
-        textStyle={{ color: colors.palette.neutral100 }}
-        style={$customTouchableStyle}
-      >
+      <ListItem topSeparator textStyle={{ color: colors.palette.neutral100 }} style={$customTouchableStyle}>
         Styled Text
       </ListItem>
 
@@ -197,4 +180,4 @@ export const DemoListItem: Demo = {
       </ListItem>
     </DemoUseCase>,
   ],
-}
+};

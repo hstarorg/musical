@@ -1,15 +1,15 @@
 /* eslint-disable react/jsx-key, react-native/no-inline-styles */
-import React from "react"
-import { EmptyState } from "../../../components"
-import { colors } from "../../../theme"
-import { DemoDivider } from "../DemoDivider"
-import { Demo } from "../DemoShowroomScreen"
-import { DemoUseCase } from "../DemoUseCase"
+import React from 'react';
+import { EmptyState } from '../../../components';
+import { colors } from '../../../theme';
+import { DemoDivider } from '../DemoDivider';
+import { Demo } from '../DemoShowroomScreen';
+import { DemoUseCase } from '../DemoUseCase';
 
 export const DemoEmptyState: Demo = {
-  name: "EmptyState",
+  name: 'EmptyState',
   description:
-    "A component to use when there is no data to display. It can be utilized to direct the user what to do next",
+    'A component to use when there is no data to display. It can be utilized to direct the user what to do next',
   data: [
     <DemoUseCase
       name="Presets"
@@ -18,33 +18,26 @@ export const DemoEmptyState: Demo = {
       <EmptyState preset="generic" />
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="Passing Content"
-      description="There are a few different ways to pass content."
-    >
+    <DemoUseCase name="Passing Content" description="There are a few different ways to pass content.">
       <EmptyState
-        imageSource={require("../../../../assets/images/logo.png")}
+        imageSource={require('../../../../assets/images/logo.png')}
         heading="Customize Image"
         content="You can pass in any image source."
       />
 
       <DemoDivider size={30} line />
 
-      <EmptyState
-        heading="Via `heading` Prop"
-        content="Via `content` prop."
-        button="Via `button` Prop"
-      />
+      <EmptyState heading="Via `heading` Prop" content="Via `content` prop." button="Via `button` Prop" />
 
       <DemoDivider size={30} line />
 
       <EmptyState
         headingTx="demoShowroomScreen.demoViaSpecifiedTxProp"
-        headingTxOptions={{ prop: "heading" }}
+        headingTxOptions={{ prop: 'heading' }}
         contentTx="demoShowroomScreen.demoViaSpecifiedTxProp"
-        contentTxOptions={{ prop: "content" }}
+        contentTxOptions={{ prop: 'content' }}
         buttonTx="demoShowroomScreen.demoViaSpecifiedTxProp"
-        buttonTxOptions={{ prop: "button" }}
+        buttonTxOptions={{ prop: 'button' }}
       />
     </DemoUseCase>,
 
@@ -53,23 +46,23 @@ export const DemoEmptyState: Demo = {
         preset="generic"
         style={{ backgroundColor: colors.error, paddingVertical: 20 }}
         imageStyle={{ height: 75, tintColor: colors.palette.neutral100 }}
-        ImageProps={{ resizeMode: "contain" }}
+        ImageProps={{ resizeMode: 'contain' }}
         headingStyle={{
           color: colors.palette.neutral100,
-          textDecorationLine: "underline",
+          textDecorationLine: 'underline',
           textDecorationColor: colors.palette.neutral100,
         }}
         contentStyle={{
           color: colors.palette.neutral100,
-          textDecorationLine: "underline",
+          textDecorationLine: 'underline',
           textDecorationColor: colors.palette.neutral100,
         }}
-        buttonStyle={{ alignSelf: "center", backgroundColor: colors.palette.neutral100 }}
+        buttonStyle={{ alignSelf: 'center', backgroundColor: colors.palette.neutral100 }}
         buttonTextStyle={{ color: colors.error }}
         ButtonProps={{
-          preset: "reversed",
+          preset: 'reversed',
         }}
       />
     </DemoUseCase>,
   ],
-}
+};

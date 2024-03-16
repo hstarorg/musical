@@ -1,27 +1,26 @@
 /* eslint-disable react/jsx-key */
-import React from "react"
-import { Text } from "../../../components"
-import { colors } from "../../../theme"
-import { Demo } from "../DemoShowroomScreen"
-import { DemoDivider } from "../DemoDivider"
-import { DemoUseCase } from "../DemoUseCase"
+import React from 'react';
+import { Text } from '../../../components';
+import { colors } from '../../../theme';
+import { Demo } from '../DemoShowroomScreen';
+import { DemoDivider } from '../DemoDivider';
+import { DemoUseCase } from '../DemoUseCase';
 
 export const DemoText: Demo = {
-  name: "Text",
-  description:
-    "For your text displaying needs. This component is a HOC over the built-in React Native one.",
+  name: 'Text',
+  description: 'For your text displaying needs. This component is a HOC over the built-in React Native one.',
   data: [
     <DemoUseCase name="Presets" description="There are a few presets that are preconfigured.">
       <Text>
-        default preset - Cillum eu laboris in labore. Excepteur mollit tempor reprehenderit fugiat
-        elit et eu consequat laborum.
+        default preset - Cillum eu laboris in labore. Excepteur mollit tempor reprehenderit fugiat elit et eu consequat
+        laborum.
       </Text>
 
       <DemoDivider />
 
       <Text preset="bold">
-        bold preset - Tempor et ullamco cupidatat in officia. Nulla ea duis elit id sunt ipsum
-        cillum duis deserunt nostrud ut nostrud id.
+        bold preset - Tempor et ullamco cupidatat in officia. Nulla ea duis elit id sunt ipsum cillum duis deserunt
+        nostrud ut nostrud id.
       </Text>
 
       <DemoDivider />
@@ -64,9 +63,7 @@ export const DemoText: Demo = {
 
       <DemoDivider />
 
-      <Text weight="normal">
-        normal - Magna incididunt dolor ut veniam veniam laboris aliqua velit ea incididunt.
-      </Text>
+      <Text weight="normal">normal - Magna incididunt dolor ut veniam veniam laboris aliqua velit ea incididunt.</Text>
 
       <DemoDivider />
 
@@ -74,19 +71,14 @@ export const DemoText: Demo = {
 
       <DemoDivider />
 
-      <Text weight="semiBold">
-        semiBold - Exercitation magna nostrud pariatur laborum occaecat aliqua.
-      </Text>
+      <Text weight="semiBold">semiBold - Exercitation magna nostrud pariatur laborum occaecat aliqua.</Text>
 
       <DemoDivider />
 
       <Text weight="bold">bold - Eiusmod ullamco magna exercitation est excepteur.</Text>
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="Passing Content"
-      description="There are a few different ways to pass content."
-    >
+    <DemoUseCase name="Passing Content" description="There are a few different ways to pass content.">
       <Text text="via `text` prop - Billum in aute fugiat proident nisi pariatur est. Cupidatat anim cillum eiusmod ad. Officia eu magna aliquip labore dolore consequat." />
 
       <DemoDivider />
@@ -106,9 +98,7 @@ export const DemoText: Demo = {
         <Text>nested children - </Text>
         <Text preset="bold">Occaecat aliqua irure proident veniam.</Text>
         {` `}
-        <Text preset="default">
-          Ullamco cupidatat officia exercitation velit non ullamco nisi..
-        </Text>
+        <Text preset="default">Ullamco cupidatat officia exercitation velit non ullamco nisi..</Text>
         {` `}
         <Text preset="bold">Occaecat aliqua irure proident veniam.</Text>
       </Text>
@@ -117,28 +107,27 @@ export const DemoText: Demo = {
     <DemoUseCase name="Styling" description="The component can be styled easily.">
       <Text>
         <Text style={{ color: colors.error }}>
-          Consequat ullamco veniam velit mollit proident excepteur aliquip id culpa ipsum velit sint
-          nostrud.
+          Consequat ullamco veniam velit mollit proident excepteur aliquip id culpa ipsum velit sint nostrud.
         </Text>
         {` `}
         <Text style={{ color: colors.palette.neutral100, backgroundColor: colors.error }}>
-          Eiusmod occaecat laboris eu ex veniam ipsum adipisicing consectetur. Magna ullamco
-          adipisicing tempor adipisicing.
+          Eiusmod occaecat laboris eu ex veniam ipsum adipisicing consectetur. Magna ullamco adipisicing tempor
+          adipisicing.
         </Text>
         {` `}
         <Text
           /* eslint-disable react-native/no-inline-styles */
           style={{
-            textDecorationLine: "underline line-through",
-            textDecorationStyle: "dashed",
+            textDecorationLine: 'underline line-through',
+            textDecorationStyle: 'dashed',
             color: colors.error,
             textDecorationColor: colors.error,
           }}
         >
-          Eiusmod occaecat laboris eu ex veniam ipsum adipisicing consectetur. Magna ullamco
-          adipisicing tempor adipisicing.
+          Eiusmod occaecat laboris eu ex veniam ipsum adipisicing consectetur. Magna ullamco adipisicing tempor
+          adipisicing.
         </Text>
       </Text>
     </DemoUseCase>,
   ],
-}
+};

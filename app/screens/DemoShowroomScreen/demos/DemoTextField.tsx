@@ -1,49 +1,49 @@
 /* eslint-disable react/jsx-key */
-import React from "react"
-import { TextStyle, ViewStyle } from "react-native"
-import { Icon, TextField } from "../../../components"
-import { colors, spacing } from "../../../theme"
-import { Demo } from "../DemoShowroomScreen"
-import { DemoDivider } from "../DemoDivider"
-import { DemoUseCase } from "../DemoUseCase"
+import React from 'react';
+import { TextStyle, ViewStyle } from 'react-native';
+import { Icon, TextField } from '../../../components';
+import { colors, spacing } from '../../../theme';
+import { Demo } from '../DemoShowroomScreen';
+import { DemoDivider } from '../DemoDivider';
+import { DemoUseCase } from '../DemoUseCase';
 
 const $customInputStyle: TextStyle = {
   backgroundColor: colors.error,
   color: colors.palette.neutral100,
-}
+};
 
 const $customInputWrapperStyle: ViewStyle = {
   backgroundColor: colors.error,
   borderColor: colors.palette.neutral800,
-}
+};
 
 const $customContainerStyle: ViewStyle = {
   backgroundColor: colors.error,
-}
+};
 
 const $customLabelAndHelperStyle: TextStyle = {
   color: colors.palette.neutral100,
-}
+};
 
 const $customInputWithAbsoluteAccessoriesStyle: ViewStyle = {
   marginHorizontal: spacing.xxl,
-}
+};
 
 const $customLeftAccessoryStyle: ViewStyle = {
   backgroundColor: colors.error,
-  position: "absolute",
+  position: 'absolute',
   left: 0,
-}
+};
 
 const $customRightAccessoryStyle: ViewStyle = {
   backgroundColor: colors.error,
-  position: "absolute",
+  position: 'absolute',
   right: 0,
-}
+};
 
 export const DemoTextField: Demo = {
-  name: "TextField",
-  description: "TextField component allows for the entering and editing of text.",
+  name: 'TextField',
+  description: 'TextField component allows for the entering and editing of text.',
   data: [
     <DemoUseCase
       name="Statuses"
@@ -77,25 +77,18 @@ export const DemoTextField: Demo = {
       />
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="Passing Content"
-      description="There are a few different ways to pass content."
-    >
-      <TextField
-        label="Via `label` prop"
-        helper="Via `helper` prop"
-        placeholder="Via `placeholder` prop"
-      />
+    <DemoUseCase name="Passing Content" description="There are a few different ways to pass content.">
+      <TextField label="Via `label` prop" helper="Via `helper` prop" placeholder="Via `placeholder` prop" />
 
       <DemoDivider size={24} />
 
       <TextField
         labelTx="demoShowroomScreen.demoViaSpecifiedTxProp"
-        labelTxOptions={{ prop: "label" }}
+        labelTxOptions={{ prop: 'label' }}
         helperTx="demoShowroomScreen.demoViaSpecifiedTxProp"
-        helperTxOptions={{ prop: "helper" }}
+        helperTxOptions={{ prop: 'helper' }}
         placeholderTx="demoShowroomScreen.demoViaSpecifiedTxProp"
-        placeholderTxOptions={{ prop: "placeholder" }}
+        placeholderTxOptions={{ prop: 'placeholder' }}
       />
 
       <DemoDivider size={24} />
@@ -176,18 +169,11 @@ export const DemoTextField: Demo = {
         helper="Via `RightAccessory` & `LeftAccessory` style prop"
         value="Aute nisi dolore fugiat anim mollit nulla ex minim ipsum ex elit."
         style={$customInputWithAbsoluteAccessoriesStyle}
-        LeftAccessory={() => (
-          <Icon icon="ladybug" containerStyle={$customLeftAccessoryStyle} color="white" size={41} />
-        )}
+        LeftAccessory={() => <Icon icon="ladybug" containerStyle={$customLeftAccessoryStyle} color="white" size={41} />}
         RightAccessory={() => (
-          <Icon
-            icon="ladybug"
-            containerStyle={$customRightAccessoryStyle}
-            color="white"
-            size={41}
-          />
+          <Icon icon="ladybug" containerStyle={$customRightAccessoryStyle} color="white" size={41} />
         )}
       />
     </DemoUseCase>,
   ],
-}
+};

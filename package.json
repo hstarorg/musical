@@ -104,12 +104,6 @@
   "engines": {
     "node": ">=18"
   },
-  "prettier": {
-    "printWidth": 100,
-    "semi": false,
-    "singleQuote": false,
-    "trailingComma": "all"
-  },
   "eslintConfig": {
     "root": true,
     "parser": "@typescript-eslint/parser",

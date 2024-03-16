@@ -1,44 +1,40 @@
 /* eslint-disable react/jsx-key, react-native/no-inline-styles */
-import React from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
-import { Header, Icon } from "../../../components"
-import { colors } from "../../../theme"
-import { Demo } from "../DemoShowroomScreen"
-import { DemoDivider } from "../DemoDivider"
-import { DemoUseCase } from "../DemoUseCase"
+import React from 'react';
+import { TextStyle, View, ViewStyle } from 'react-native';
+import { Header, Icon } from '../../../components';
+import { colors } from '../../../theme';
+import { Demo } from '../DemoShowroomScreen';
+import { DemoDivider } from '../DemoDivider';
+import { DemoUseCase } from '../DemoUseCase';
 
 const $rightAlignTitle: TextStyle = {
-  textAlign: "right",
-}
+  textAlign: 'right',
+};
 
 const $customLeftAction: ViewStyle = {
   backgroundColor: colors.error,
   flexGrow: 0,
   flexBasis: 100,
-  height: "100%",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  overflow: "hidden",
-}
+  height: '100%',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  overflow: 'hidden',
+};
 
 const $customTitle: TextStyle = {
-  textDecorationLine: "underline line-through",
-  textDecorationStyle: "dashed",
+  textDecorationLine: 'underline line-through',
+  textDecorationStyle: 'dashed',
   color: colors.error,
   textDecorationColor: colors.error,
-}
+};
 
-const $customWhiteTitle: TextStyle = { color: colors.palette.neutral100 }
+const $customWhiteTitle: TextStyle = { color: colors.palette.neutral100 };
 
 export const DemoHeader: Demo = {
-  name: "Header",
-  description:
-    "Component that appears on many screens. Will hold navigation buttons and screen title.",
+  name: 'Header',
+  description: 'Component that appears on many screens. Will hold navigation buttons and screen title.',
   data: [
-    <DemoUseCase
-      name="Action Icons"
-      description="You can easily pass in icons to the left or right action components."
-    >
+    <DemoUseCase name="Action Icons" description="You can easily pass in icons to the left or right action components.">
       <Header title="Left Icon" leftIcon="ladybug" safeAreaEdges={[]} />
       <DemoDivider size={24} />
       <Header title="Right Icon" rightIcon="ladybug" safeAreaEdges={[]} />
@@ -46,15 +42,8 @@ export const DemoHeader: Demo = {
       <Header title="Both Icons" leftIcon="ladybug" rightIcon="ladybug" safeAreaEdges={[]} />
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="Action Text"
-      description="You can easily pass in text to the left or right action components."
-    >
-      <Header
-        title="Via `leftTx`"
-        leftTx="demoShowroomScreen.demoHeaderTxExample"
-        safeAreaEdges={[]}
-      />
+    <DemoUseCase name="Action Text" description="You can easily pass in text to the left or right action components.">
+      <Header title="Via `leftTx`" leftTx="demoShowroomScreen.demoHeaderTxExample" safeAreaEdges={[]} />
       <DemoDivider size={24} />
       <Header title="Via `rightText`" rightText="Yay" safeAreaEdges={[]} />
     </DemoUseCase>,
@@ -84,13 +73,7 @@ export const DemoHeader: Demo = {
     >
       <Header title="Centered Title" leftIcon="ladybug" rightText="Hooray" safeAreaEdges={[]} />
       <DemoDivider size={24} />
-      <Header
-        title="Flex Title"
-        titleMode="flex"
-        leftIcon="ladybug"
-        rightText="Hooray"
-        safeAreaEdges={[]}
-      />
+      <Header title="Flex Title" titleMode="flex" leftIcon="ladybug" rightText="Hooray" safeAreaEdges={[]} />
     </DemoUseCase>,
 
     <DemoUseCase name="Styling" description="The component can be styled easily.">
@@ -114,4 +97,4 @@ export const DemoHeader: Demo = {
       />
     </DemoUseCase>,
   ],
-}
+};

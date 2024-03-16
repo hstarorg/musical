@@ -1,5 +1,5 @@
-import * as React from "react"
-import { ComponentType } from "react"
+import * as React from 'react';
+import { ComponentType } from 'react';
 import {
   Image,
   ImageStyle,
@@ -9,40 +9,40 @@ import {
   View,
   ViewProps,
   ViewStyle,
-} from "react-native"
+} from 'react-native';
 
-export type IconTypes = keyof typeof iconRegistry
+export type IconTypes = keyof typeof iconRegistry;
 
 interface IconProps extends TouchableOpacityProps {
   /**
    * The name of the icon
    */
-  icon: IconTypes
+  icon: IconTypes;
 
   /**
    * An optional tint color for the icon
    */
-  color?: string
+  color?: string;
 
   /**
    * An optional size for the icon. If not provided, the icon will be sized to the icon's resolution.
    */
-  size?: number
+  size?: number;
 
   /**
    * Style overrides for the icon image
    */
-  style?: StyleProp<ImageStyle>
+  style?: StyleProp<ImageStyle>;
 
   /**
    * Style overrides for the icon container
    */
-  containerStyle?: StyleProp<ViewStyle>
+  containerStyle?: StyleProp<ViewStyle>;
 
   /**
    * An optional function to be called when the icon is pressed
    */
-  onPress?: TouchableOpacityProps["onPress"]
+  onPress?: TouchableOpacityProps['onPress'];
 }
 
 /**
@@ -60,56 +60,54 @@ export function Icon(props: IconProps) {
     style: $imageStyleOverride,
     containerStyle: $containerStyleOverride,
     ...WrapperProps
-  } = props
+  } = props;
 
-  const isPressable = !!WrapperProps.onPress
-  const Wrapper = (WrapperProps?.onPress ? TouchableOpacity : View) as ComponentType<
-    TouchableOpacityProps | ViewProps
-  >
+  const isPressable = !!WrapperProps.onPress;
+  const Wrapper = (WrapperProps?.onPress ? TouchableOpacity : View) as ComponentType<TouchableOpacityProps | ViewProps>;
 
   const $imageStyle: StyleProp<ImageStyle> = [
     $imageStyleBase,
     color !== undefined && { tintColor: color },
     size !== undefined && { width: size, height: size },
     $imageStyleOverride,
-  ]
+  ];
 
   return (
     <Wrapper
-      accessibilityRole={isPressable ? "imagebutton" : undefined}
+      accessibilityRole={isPressable ? 'imagebutton' : undefined}
       {...WrapperProps}
       style={$containerStyleOverride}
     >
       <Image style={$imageStyle} source={iconRegistry[icon]} />
     </Wrapper>
-  )
+  );
 }
 
 export const iconRegistry = {
-  back: require("../../assets/icons/back.png"),
-  bell: require("../../assets/icons/bell.png"),
-  caretLeft: require("../../assets/icons/caretLeft.png"),
-  caretRight: require("../../assets/icons/caretRight.png"),
-  check: require("../../assets/icons/check.png"),
-  clap: require("../../assets/icons/demo/clap.png"),
-  community: require("../../assets/icons/demo/community.png"),
-  components: require("../../assets/icons/demo/components.png"),
-  debug: require("../../assets/icons/demo/debug.png"),
-  github: require("../../assets/icons/demo/github.png"),
-  heart: require("../../assets/icons/demo/heart.png"),
-  hidden: require("../../assets/icons/hidden.png"),
-  ladybug: require("../../assets/icons/ladybug.png"),
-  lock: require("../../assets/icons/lock.png"),
-  menu: require("../../assets/icons/menu.png"),
-  more: require("../../assets/icons/more.png"),
-  pin: require("../../assets/icons/demo/pin.png"),
-  podcast: require("../../assets/icons/demo/podcast.png"),
-  settings: require("../../assets/icons/settings.png"),
-  slack: require("../../assets/icons/demo/slack.png"),
-  view: require("../../assets/icons/view.png"),
-  x: require("../../assets/icons/x.png"),
-}
+  back: require('../../assets/icons/back.png'),
+  bell: require('../../assets/icons/bell.png'),
+  caretLeft: require('../../assets/icons/caretLeft.png'),
+  caretRight: require('../../assets/icons/caretRight.png'),
+  check: require('../../assets/icons/check.png'),
+  clap: require('../../assets/icons/demo/clap.png'),
+  community: require('../../assets/icons/demo/community.png'),
+  components: require('../../assets/icons/demo/components.png'),
+  debug: require('../../assets/icons/demo/debug.png'),
+  github: require('../../assets/icons/demo/github.png'),
+  heart: require('../../assets/icons/demo/heart.png'),
+  hidden: require('../../assets/icons/hidden.png'),
+  ladybug: require('../../assets/icons/ladybug.png'),
+  lock: require('../../assets/icons/lock.png'),
+  menu: require('../../assets/icons/menu.png'),
+  more: require('../../assets/icons/more.png'),
+  pin: require('../../assets/icons/demo/pin.png'),
+  podcast: require('../../assets/icons/demo/podcast.png'),
+  settings: require('../../assets/icons/settings.png'),
+  slack: require('../../assets/icons/demo/slack.png'),
+  view: require('../../assets/icons/view.png'),
+  x: require('../../assets/icons/x.png'),
+};
 
 const $imageStyleBase: ImageStyle = {
-  resizeMode: "contain",
-}
+  resizeMode: 'contain',
+};

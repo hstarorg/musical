@@ -3,6 +3,14 @@ A customize music player
 
 ## Get started
 
+```bash
+# run iOS
+pnpm run ios
+
+# Or Android via
+pnpm run android
+```
+
 
 ## Project init script
 
@@ -29,7 +37,7 @@ This is the boilerplate that [Infinite Red](https://infinite.red) uses as a way 
 
 Currently includes:
 
-- React Native
+- React Nativepnpm
 - React Navigation
 - MobX State Tree
 - TypeScript

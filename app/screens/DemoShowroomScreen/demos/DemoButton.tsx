@@ -1,42 +1,42 @@
 /* eslint-disable react/jsx-key */
-import React from "react"
-import { ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Icon, Text } from "../../../components"
-import { colors, typography } from "../../../theme"
-import { Demo } from "../DemoShowroomScreen"
-import { DemoDivider } from "../DemoDivider"
-import { DemoUseCase } from "../DemoUseCase"
+import React from 'react';
+import { ImageStyle, TextStyle, View, ViewStyle } from 'react-native';
+import { Button, Icon, Text } from '../../../components';
+import { colors, typography } from '../../../theme';
+import { Demo } from '../DemoShowroomScreen';
+import { DemoDivider } from '../DemoDivider';
+import { DemoUseCase } from '../DemoUseCase';
 
-const $iconStyle: ImageStyle = { width: 30, height: 30 }
-const $customButtonStyle: ViewStyle = { backgroundColor: colors.error, height: 100 }
-const $customButtonPressedStyle: ViewStyle = { backgroundColor: colors.error }
+const $iconStyle: ImageStyle = { width: 30, height: 30 };
+const $customButtonStyle: ViewStyle = { backgroundColor: colors.error, height: 100 };
+const $customButtonPressedStyle: ViewStyle = { backgroundColor: colors.error };
 const $customButtonTextStyle: TextStyle = {
   color: colors.error,
   fontFamily: typography.primary.bold,
-  textDecorationLine: "underline",
+  textDecorationLine: 'underline',
   textDecorationColor: colors.error,
-}
-const $customButtonPressedTextStyle: TextStyle = { color: colors.palette.neutral100 }
+};
+const $customButtonPressedTextStyle: TextStyle = { color: colors.palette.neutral100 };
 const $customButtonRightAccessoryStyle: ViewStyle = {
-  width: "53%",
-  height: "200%",
+  width: '53%',
+  height: '200%',
   backgroundColor: colors.error,
-  position: "absolute",
+  position: 'absolute',
   top: 0,
   right: 0,
-}
-const $customButtonPressedRightAccessoryStyle: ImageStyle = { tintColor: colors.palette.neutral100 }
+};
+const $customButtonPressedRightAccessoryStyle: ImageStyle = { tintColor: colors.palette.neutral100 };
 
-const $disabledOpacity: ViewStyle = { opacity: 0.5 }
+const $disabledOpacity: ViewStyle = { opacity: 0.5 };
 const $disabledButtonTextStyle: TextStyle = {
   color: colors.palette.neutral100,
   textDecorationColor: colors.palette.neutral100,
-}
+};
 
 export const DemoButton: Demo = {
-  name: "Button",
+  name: 'Button',
   description:
-    "A component that allows users to take actions and make choices. Wraps the Text component with a Pressable component.",
+    'A component that allows users to take actions and make choices. Wraps the Text component with a Pressable component.',
   data: [
     <DemoUseCase name="Presets" description="There are a few presets that are preconfigured.">
       <Button>Default - Laboris In Labore</Button>
@@ -48,10 +48,7 @@ export const DemoButton: Demo = {
       <Button preset="reversed">Reversed - Ad Ipsum</Button>
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="Passing Content"
-      description="There are a few different ways to pass content."
-    >
+    <DemoUseCase name="Passing Content" description="There are a few different ways to pass content.">
       <Button text="Via `text` Prop - Billum In" />
       <DemoDivider />
 
@@ -63,9 +60,7 @@ export const DemoButton: Demo = {
 
       <Button
         preset="filled"
-        RightAccessory={(props) => (
-          <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />
-        )}
+        RightAccessory={(props) => <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />}
       >
         RightAccessory - Duis Quis
       </Button>
@@ -73,9 +68,7 @@ export const DemoButton: Demo = {
 
       <Button
         preset="filled"
-        LeftAccessory={(props) => (
-          <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />
-        )}
+        LeftAccessory={(props) => <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />}
       >
         LeftAccessory - Duis Proident
       </Button>
@@ -85,9 +78,7 @@ export const DemoButton: Demo = {
         <Text>
           <Text preset="bold">Nested children - proident veniam.</Text>
           {` `}
-          <Text preset="default">
-            Ullamco cupidatat officia exercitation velit non ullamco nisi..
-          </Text>
+          <Text preset="default">Ullamco cupidatat officia exercitation velit non ullamco nisi..</Text>
           {` `}
           <Text preset="bold">Occaecat aliqua irure proident veniam.</Text>
         </Text>
@@ -96,15 +87,11 @@ export const DemoButton: Demo = {
 
       <Button
         preset="reversed"
-        RightAccessory={(props) => (
-          <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />
-        )}
-        LeftAccessory={(props) => (
-          <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />
-        )}
+        RightAccessory={(props) => <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />}
+        LeftAccessory={(props) => <Icon containerStyle={props.style} style={$iconStyle} icon="ladybug" />}
       >
-        Multiline - consequat veniam veniam reprehenderit. Fugiat id nisi quis duis sunt proident
-        mollit dolor mollit adipisicing proident deserunt.
+        Multiline - consequat veniam veniam reprehenderit. Fugiat id nisi quis duis sunt proident mollit dolor mollit
+        adipisicing proident deserunt.
       </Button>
     </DemoUseCase>,
 
@@ -117,10 +104,7 @@ export const DemoButton: Demo = {
       </Button>
       <DemoDivider />
 
-      <Button
-        preset="reversed"
-        RightAccessory={() => <View style={$customButtonRightAccessoryStyle} />}
-      >
+      <Button preset="reversed" RightAccessory={() => <View style={$customButtonRightAccessoryStyle} />}>
         Style Accessories - enim ea id fugiat anim ad.
       </Button>
       <DemoDivider />
@@ -131,10 +115,7 @@ export const DemoButton: Demo = {
         RightAccessory={(props) => (
           <Icon
             containerStyle={props.style}
-            style={[
-              $iconStyle,
-              props.pressableState.pressed && $customButtonPressedRightAccessoryStyle,
-            ]}
+            style={[$iconStyle, props.pressableState.pressed && $customButtonPressedRightAccessoryStyle]}
             icon="ladybug"
           />
         )}
@@ -208,4 +189,4 @@ export const DemoButton: Demo = {
       </Button>
     </DemoUseCase>,
   ],
-}
+};
