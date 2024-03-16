@@ -1,126 +1,185 @@
-# musical
+# Musical
+A customize music player
 
-A musical player for myself. Only play local musics.
+## Get started
 
-# Get started
 
-## 选型说明
-
-```js
-// 路由库（https://reactnavigation.org/）
-react-navigation;
-// 定时器（https://github.com/ocetnik/react-native-background-timer）
-react-native-background-timer
-```
-
-## react-native 升级工具
-
-> https://react-native-community.github.io/upgrade-helper/
-
-## Connect to devices
+## Project init script
 
 ```bash
-# adb to 夜神模拟器
-# 如果遇到连接时提示：adb server version (36) doesn't match this client (41); killing...
-# 则可以直接将 AndroidStudio 下的 adb 拷贝到夜神模拟器安装目录(root\Nox\bin)下，并重命名为 nox_adb.exe 覆盖同名文件
-adb connect 127.0.0.1:62001
-```
-
-## 发布
-
-```bash
-# 设置应用ICON，可以在 https://icon.wuruihong.com/ 一键生成多分辨率icon，然后替换 android\app\src\main\res 目录的内容
-
-# 生成密钥文件
-keytool -genkeypair -v -storetype PKCS12 -keystore musical-release-key.keystore -alias musical -keyalg RSA -keysize 2048 -validity 1000
-
-# 配置密钥，在 android/app/gradle.properties 添加如下内容
-MYAPP_RELEASE_STORE_FILE=musical-release-key.keystore
-MYAPP_RELEASE_KEY_ALIAS=musical
-MYAPP_RELEASE_STORE_PASSWORD=具体的密码
-MYAPP_RELEASE_KEY_PASSWORD=具体的密码
-
-# 生成 release 包
-# 注意：如果要执行构建，那么需要满足两个条件
-# 1. 需要生成密钥文件，并放在 src/android/app 下，密钥文件必须是 musical-release-key.keystore
-# 2. 在 src/android/gradle.properties 中设置“配置密钥”中的内容，并设置好具体的密码
-cd android
-gradlew assembleRelease # 如果是Linux or Mac，则需要 ./gradlew assembleRelease
-# 也可执行执行：
-npm run build:android
-
-# 可以从如下地址找到部署包
-android/app/build/outputs/apk/release/app-release.apk
-```
-
-## 其他
-
-```bash
-# 清除 gradle 缓存
-gradlew cleanBuildCache
+npx ignite-cli new musical \
+        --bundle=vip.hstar.musical \
+        --git=false \
+        --install-deps \
+        --packager=pnpm \
+        --target-path=/Users/jay/MyProjects/musical/musical \
+        --remove-demo=false \
+        --workflow=expo \
+        --no-timeout=false 
 ```
 
 
-# Getting Started
+# Welcome to your new ignited app!
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+[![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)
 
-## Step 1: Start the Metro Server
+## The latest and greatest boilerplate for Infinite Red opinions
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+This is the boilerplate that [Infinite Red](https://infinite.red) uses as a way to test bleeding-edge changes to our React Native stack.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+Currently includes:
 
-```bash
-# using npm
-npm start
+- React Native
+- React Navigation
+- MobX State Tree
+- TypeScript
+- And more!
 
-# OR using Yarn
-yarn start
+## Quick Start
+
+The Ignite boilerplate project's structure will look similar to this:
+
+```
+ignite-project
+├── app
+│   ├── components
+│   ├── config
+│   ├── i18n
+│   ├── models
+│   ├── navigators
+│   ├── screens
+│   ├── services
+│   ├── theme
+│   ├── utils
+│   └── app.tsx
+├── assets
+│   ├── icons
+│   └── images
+├── test
+│   ├── __snapshots__
+│   ├── mockFile.ts
+│   └── setup.ts
+├── README.md
+├── android
+│   ├── app
+│   ├── build.gradle
+│   ├── gradle
+│   ├── gradle.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   ├── keystores
+│   └── settings.gradle
+├── ignite
+│   └── templates
+|       |── app-icon
+│       ├── component
+│       ├── model
+│       ├── navigator
+│       └── screen
+├── index.js
+├── ios
+│   ├── IgniteProject
+│   ├── IgniteProject-tvOS
+│   ├── IgniteProject-tvOSTests
+│   ├── IgniteProject.xcodeproj
+│   └── IgniteProjectTests
+├── .env
+└── package.json
+
 ```
 
-## Step 2: Start your Application
+### ./app directory
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+Included in an Ignite boilerplate project is the `app` directory. This is a directory you would normally have to create when using vanilla React Native.
 
-### For Android
+The inside of the `app` directory looks similar to the following:
 
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```
+app
+├── components
+├── config
+├── i18n
+├── models
+├── navigators
+├── screens
+├── services
+├── theme
+├── utils
+└── app.tsx
 ```
 
-### For iOS
+**components**
+This is where your reusable components live which help you build your screens.
 
-```bash
-# using npm
-npm run ios
+**i18n**
+This is where your translations will live if you are using `react-native-i18n`.
 
-# OR using Yarn
-yarn ios
+**models**
+This is where your app's models will live. Each model has a directory which will contain the `mobx-state-tree` model file, test file, and any other supporting files like actions, types, etc.
+
+**navigators**
+This is where your `react-navigation` navigators will live.
+
+**screens**
+This is where your screen components will live. A screen is a React component which will take up the entire screen and be part of the navigation hierarchy. Each screen will have a directory containing the `.tsx` file, along with any assets or other helper files.
+
+**services**
+Any services that interface with the outside world will live here (think REST APIs, Push Notifications, etc.).
+
+**theme**
+Here lives the theme for your application, including spacing, colors, and typography.
+
+**utils**
+This is a great place to put miscellaneous helpers and utilities. Things like date helpers, formatters, etc. are often found here. However, it should only be used for things that are truly shared across your application. If a helper or utility is only used by a specific component or model, consider co-locating your helper with that component or model.
+
+**app.tsx** This is the entry point to your app. This is where you will find the main App component which renders the rest of the application.
+
+### ./assets directory
+
+This directory is designed to organize and store various assets, making it easy for you to manage and use them in your application. The assets are further categorized into subdirectories, including `icons` and `images`:
+
+```
+assets
+├── icons
+└── images
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+**icons**
+This is where your icon assets will live. These icons can be used for buttons, navigation elements, or any other UI components. The recommended format for icons is PNG, but other formats can be used as well.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+Ignite comes with a built-in `Icon` component. You can find detailed usage instructions in the [docs](https://github.com/infinitered/ignite/blob/master/docs/Components-Icon.md).
 
-## Step 3: Modifying your App
+**images**
+This is where your images will live, such as background images, logos, or any other graphics. You can use various formats such as PNG, JPEG, or GIF for your images.
 
-Now that you have successfully run the app, let's modify it.
+Another valuable built-in component within Ignite is the `AutoImage` component. You can find detailed usage instructions in the [docs](https://github.com/infinitered/ignite/blob/master/docs/Components-AutoImage.md).
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+How to use your `icon` or `image` assets:
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+```
+import { Image } from 'react-native';
 
-## Congratulations! :tada:
+const MyComponent = () => {
+  return (
+    <Image source={require('../assets/images/my_image.png')} />
+  );
+};
+```
 
-You've successfully run and modified your React Native App. :partying_face:
+### ./ignite directory
 
-### Now what?
+The `ignite` directory stores all things Ignite, including CLI and boilerplate items. Here you will find templates you can customize to help you get started with React Native.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+### ./test directory
+
+This directory will hold your Jest configs and mocks.
+
+## Running Maestro end-to-end tests
+
+Follow our [Maestro Setup](https://ignitecookbook.com/docs/recipes/MaestroSetup) recipe from the [Ignite Cookbook](https://ignitecookbook.com/)!
+
+## Previous Boilerplates
+
+- [2018 aka Bowser](https://github.com/infinitered/ignite-bowser)
+- [2017 aka Andross](https://github.com/infinitered/ignite-andross)
+- [2016 aka Ignite 1.0](https://github.com/infinitered/ignite-ir-boilerplate-2016)

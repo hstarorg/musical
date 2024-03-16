@@ -1,27 +1,12 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+import "@expo/metro-runtime"
+import React from "react"
+import * as SplashScreen from "expo-splash-screen"
+import App from "./app/app"
 
-import React from 'react';
+SplashScreen.preventAutoHideAsync()
 
-import { NavigationContainer } from '@react-navigation/native';
-import { enableScreens } from 'react-native-screens';
-import { RouteContainer } from './src/shared';
-import { navigationConfig } from './src/navigation.config';
-enableScreens(true);
+function IgniteApp() {
+  return <App hideSplashScreen={SplashScreen.hideAsync} />
+}
 
-const App = () => {
-  return (
-    <NavigationContainer>
-      <RouteContainer navigationConfig={navigationConfig} />
-    </NavigationContainer>
-  );
-};
-
-export default App;
+export default IgniteApp
