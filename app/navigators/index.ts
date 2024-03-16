@@ -1,3 +1,2 @@
-export * from './AppNavigator';
+export { AppNavigator, AppNavigationProps } from './AppNavigator';
 export * from './navigationUtilities';
-// export other navigators from here

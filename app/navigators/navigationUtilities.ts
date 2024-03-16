@@ -4,7 +4,7 @@ import { NavigationState, PartialState, createNavigationContainerRef } from '@re
 import Config from '../config';
 import type { PersistNavigationConfig } from '../config/config.base';
 import { useIsMounted } from '../utils/useIsMounted';
-import type { AppStackParamList, NavigationProps } from './AppNavigator';
+import type { AppNavigationProps } from './AppNavigator';
 
 import * as storage from '../utils/storage';
 
@@ -20,7 +20,7 @@ type Storage = typeof storage;
  * The types on this reference will only let you reference top level navigators. If you have
  * nested navigators, you'll need to use the `useNavigation` with the stack navigator's ParamList type.
  */
-export const navigationRef = createNavigationContainerRef<AppStackParamList>();
+export const navigationRef = createNavigationContainerRef();
 
 /**
  * Gets the current screen from any navigation state.
@@ -31,10 +31,12 @@ export function getActiveRouteName(state: NavigationState | PartialState<Navigat
   const route = state.routes[state.index ?? 0];
 
   // Found the active route -- return the name
-  if (!route.state) return route.name as keyof AppStackParamList;
+  if (!route.state) {
+    return route.name;
+  }
 
   // Recursive call to deal with nested routers
-  return getActiveRouteName(route.state as NavigationState<AppStackParamList>);
+  return getActiveRouteName(route.state);
 }
 
 /**
@@ -112,13 +114,13 @@ function navigationRestoredDefaultState(persistNavigation: PersistNavigationConf
  * @returns {object} - The navigation state and persistence functions.
  */
 export function useNavigationPersistence(storage: Storage, persistenceKey: string) {
-  const [initialNavigationState, setInitialNavigationState] = useState<NavigationProps['initialState']>();
+  const [initialNavigationState, setInitialNavigationState] = useState<AppNavigationProps['initialState']>();
   const isMounted = useIsMounted();
 
   const initNavState = navigationRestoredDefaultState(Config.persistNavigation);
   const [isRestored, setIsRestored] = useState(initNavState);
 
-  const routeNameRef = useRef<keyof AppStackParamList | undefined>();
+  const routeNameRef = useRef<string | undefined>();
 
   const onNavigationStateChange = (state: NavigationState | undefined) => {
     const previousRouteName = routeNameRef.current;
@@ -133,7 +135,7 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
       }
 
       // Save the current route name for later comparison
-      routeNameRef.current = currentRouteName as keyof AppStackParamList;
+      routeNameRef.current = currentRouteName;
 
       // Persist state to storage
       storage.save(persistenceKey, state);
@@ -142,7 +144,7 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
 
   const restoreState = async () => {
     try {
-      const state = (await storage.load(persistenceKey)) as NavigationProps['initialState'] | null;
+      const state = (await storage.load(persistenceKey)) as AppNavigationProps['initialState'] | null;
       if (state) setInitialNavigationState(state);
     } finally {
       if (isMounted()) setIsRestored(true);

@@ -7,3 +7,6 @@ export * from './DemoShowroomScreen/DemoShowroomScreen';
 
 export * from './ErrorScreen/ErrorBoundary';
 // export other screens here
+
+export { PlayScreen } from './PlayScreen';
+export { MineScreen } from './MineScreen';
