@@ -1,19 +1,22 @@
-import * as Localization from 'expo-localization';
-import _i18n from 'i18n-js';
+// import * as Localization from 'expo-localization';
+import {I18n, TranslateOptions} from 'i18n-js';
 import {I18nManager} from 'react-native';
 
 // if English isn't your default language, move Translations to the appropriate language file.
 import en, {Translations} from './en';
 
-const i18n = _i18n as any;
+// console.log(_i18n);
 
-i18n.fallbacks = true;
+const i18n = new I18n();
+
+// i18n. = true;
 
 // to use regional locales use { "en-US": enUS } etc
 i18n.translations = {en, 'en-US': en};
 
 const fallbackLocale = 'en-US';
-const systemLocale = Localization.getLocales()[0];
+// const systemLocale = Localization.getLocales()[0];
+const systemLocale: any = {};
 const systemLocaleTag = systemLocale?.languageTag ?? 'en-US';
 
 if (Object.prototype.hasOwnProperty.call(i18n.translations, systemLocaleTag)) {
@@ -62,3 +65,29 @@ type RecursiveKeyOfHandleValue<
   : TValue extends object
   ? Text | `${Text}${RecursiveKeyOfInner<TValue>}`
   : Text;
+
+/**
+ * Translates text.
+ * @param {TxKeyPath} key - The i18n key.
+ * @param {i18n.TranslateOptions} options - The i18n options.
+ * @returns {string} - The translated text.
+ * @example
+ * Translations:
+ *
+ * ```en.ts
+ * {
+ *  "hello": "Hello, {{name}}!"
+ * }
+ * ```
+ *
+ * Usage:
+ * ```ts
+ * import { translate } from "i18n-js"
+ *
+ * translate("common.ok", { name: "world" })
+ * // => "Hello world!"
+ * ```
+ */
+export function translate(key: TxKeyPath, options?: TranslateOptions): string {
+  return i18n.t(key, options);
+}

@@ -14,8 +14,8 @@ To start Metro, run the following command from the _root_ of your React Native p
 # using npm
 npm start
 
-# OR using Yarn
-yarn start
+# OR using Pnpm
+pnpm start
 ```
 
 ## Step 2: Start your Application

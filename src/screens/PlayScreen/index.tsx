@@ -1,75 +1,47 @@
-import {observer} from 'mobx-react-lite';
-import React, {FC} from 'react';
-import {Image, ImageStyle, TextStyle, View, ViewStyle} from 'react-native';
-import {Button, Text} from 'app/components';
-import {isRTL} from '../../i18n';
-import {AppStackScreenProps} from '../../navigators';
+import React from 'react';
+import {TextStyle, View, ViewStyle} from 'react-native';
+import {Button, Text} from '../../components';
+// import {isRTL} from '../../i18n';
 import {colors, spacing} from '../../theme';
-import {useHeader} from '../../utils/useHeader';
-import {useSafeAreaInsetsStyle} from '../../utils/useSafeAreaInsetsStyle';
 
-const welcomeLogo = require('../../../assets/images/logo.png');
-const welcomeFace = require('../../../assets/images/welcome-face.png');
+// const welcomeLogo = require('../../../assets/images/logo.png');
+// const welcomeFace = require('../../../assets/images/welcome-face.png');
 
-interface WelcomeScreenProps extends AppStackScreenProps<'Welcome'> {}
+export function PlayScreen(props: any) {
+  console.log(props);
+  const {navigation} = props;
 
-export const PlayScreen: FC<WelcomeScreenProps> = observer(
-  function WelcomeScreen(_props) {
-    const {navigation} = _props;
-    const {
-      authenticationStore: {logout},
-    } = useStores();
+  function goNext() {
+    navigation.navigate('Demo', {screen: 'DemoShowroom', params: {}});
+  }
 
-    function goNext() {
-      navigation.navigate('Demo', {screen: 'DemoShowroom', params: {}});
-    }
-
-    useHeader(
-      {
-        rightTx: 'common.logOut',
-        onRightPress: logout,
-      },
-      [logout],
-    );
-
-    const $bottomContainerInsets = useSafeAreaInsetsStyle(['bottom']);
-
-    return (
-      <View style={$container}>
-        <View style={$topContainer}>
-          <Image
-            style={$welcomeLogo}
-            source={welcomeLogo}
-            resizeMode="contain"
-          />
-          <Text
-            testID="welcome-heading"
-            style={$welcomeHeading}
-            tx="welcomeScreen.readyForLaunch"
-            preset="heading"
-          />
-          <Text tx="welcomeScreen.exciting" preset="subheading" />
-          <Image
-            style={$welcomeFace}
-            source={welcomeFace}
-            resizeMode="contain"
-          />
-        </View>
-
-        <View style={[$bottomContainer, $bottomContainerInsets]}>
-          <Text tx="welcomeScreen.postscript" size="md" />
-
-          <Button
-            testID="next-screen-button"
-            preset="reversed"
-            tx="welcomeScreen.letsGo"
-            onPress={goNext}
-          />
-        </View>
+  return (
+    <View style={$container}>
+      <View style={$topContainer}>
+        {/* <Image style={$welcomeLogo} source={welcomeLogo} resizeMode="contain" /> */}
+        <Text
+          testID="welcome-heading"
+          style={$welcomeHeading}
+          tx="welcomeScreen.readyForLaunch"
+          preset="heading"
+        />
+        <Text tx="welcomeScreen.exciting" preset="subheading" />
+        {/* <Image style={$welcomeFace} source={welcomeFace} resizeMode="contain" /> */}
       </View>
-    );
-  },
-);
+
+      <View style={[$bottomContainer]}>
+        <Text tx="welcomeScreen.postscript" size="md" />
+
+        <Button
+          testID="next-screen-button"
+          preset="reversed"
+          tx="welcomeScreen.letsGo"
+          onPress={goNext}
+        />
+      </View>
+    </View>
+  );
+}
 
 const $container: ViewStyle = {
   flex: 1,
@@ -94,20 +66,20 @@ const $bottomContainer: ViewStyle = {
   paddingHorizontal: spacing.lg,
   justifyContent: 'space-around',
 };
-const $welcomeLogo: ImageStyle = {
-  height: 88,
-  width: '100%',
-  marginBottom: spacing.xxl,
-};
+// const $welcomeLogo: ImageStyle = {
+//   height: 88,
+//   width: '100%',
+//   marginBottom: spacing.xxl,
+// };
 
-const $welcomeFace: ImageStyle = {
-  height: 169,
-  width: 269,
-  position: 'absolute',
-  bottom: -47,
-  right: -80,
-  transform: [{scaleX: isRTL ? -1 : 1}],
-};
+// const $welcomeFace: ImageStyle = {
+//   height: 169,
+//   width: 269,
+//   position: 'absolute',
+//   bottom: -47,
+//   right: -80,
+//   transform: [{scaleX: isRTL ? -1 : 1}],
+// };
 
 const $welcomeHeading: TextStyle = {
   marginBottom: spacing.md,
