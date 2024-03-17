@@ -12,13 +12,12 @@ import {
 import React from 'react';
 import {useColorScheme} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {MineScreen} from './screens/MineScreen';
 import {PlayScreen} from './screens/PlayScreen';
 import {config} from './config';
 import {navigationRef, useBackButtonHandler} from './utils/nativigator-utils';
-
-// import FontAwesome5Icon from 'react-native-vector-icons';
 
 /**
  * This is a list of all the route names that will exit the app if the back button
@@ -44,14 +43,17 @@ export function AppNavigator(props: AppNavigationProps) {
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <BottomTab.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName={'PlayScreen'}>
+        initialRouteName="PlayScreen">
         <BottomTab.Screen
           name="PlayScreen"
           component={PlayScreen}
           options={{
             tabBarLabel: '播放',
             headerShown: false,
-            // tabBarIcon: ({ size, color }) => <FontAwesome5Icon name="play-circle" size={size} color={color} />,
+            tabBarBadge: 3,
+            tabBarIcon: ({size, color}) => (
+              <FontAwesome5Icon name="play-circle" size={size} color={color} />
+            ),
           }}
         />
         <BottomTab.Screen
@@ -60,7 +62,9 @@ export function AppNavigator(props: AppNavigationProps) {
           options={{
             tabBarLabel: '音乐',
             title: '本地音乐',
-            // tabBarIcon: ({ size, color }) => <FontAwesome5Icon name="play-circle" size={size} color={color} />,
+            tabBarIcon: ({size, color}) => (
+              <FontAwesome5Icon name="play-circle" size={size} color={color} />
+            ),
           }}
         />
         <BottomTab.Screen
@@ -70,7 +74,9 @@ export function AppNavigator(props: AppNavigationProps) {
             tabBarLabel: '我的',
             headerShown: false,
             lazy: true, // 懒加载场景
-            // tabBarIcon: ({ size, color }) => <FontAwesome5Icon name="play-circle" size={size} color={color} />,
+            tabBarIcon: ({size, color}) => (
+              <FontAwesome5Icon name="play-circle" size={size} color={color} />
+            ),
           }}
         />
       </BottomTab.Navigator>

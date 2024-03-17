@@ -23,8 +23,9 @@ export function PlayScreen(props: any) {
           testID="welcome-heading"
           style={$welcomeHeading}
           tx="welcomeScreen.readyForLaunch"
-          preset="heading"
-        />
+          preset="heading">
+          我的是是是是是
+        </Text>
         <Text tx="welcomeScreen.exciting" preset="subheading" />
         {/* <Image style={$welcomeFace} source={welcomeFace} resizeMode="contain" /> */}
       </View>
