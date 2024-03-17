@@ -10,8 +10,16 @@
     "test": "jest"
   },
   "dependencies": {
+    "@expo-google-fonts/space-grotesk": "^0.2.3",
+    "@react-navigation/native": "^6.1.16",
+    "@shopify/flash-list": "^1.6.3",
+    "expo-localization": "^14.8.3",
+    "expo-status-bar": "^1.11.1",
+    "i18n-js": "^4.4.3",
     "react": "18.2.0",
-    "react-native": "0.73.6"
+    "react-native": "0.73.6",
+    "react-native-gesture-handler": "^2.15.0",
+    "react-native-reanimated": "^3.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
