@@ -50,7 +50,7 @@ export function AppNavigator(props: AppNavigationProps) {
           options={{
             tabBarLabel: '播放',
             headerShown: false,
-            tabBarBadge: 3,
+            // tabBarBadge: 3,
             tabBarIcon: ({size, color}) => (
               <FontAwesome5Icon name="play-circle" size={size} color={color} />
             ),

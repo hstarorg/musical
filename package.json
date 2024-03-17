@@ -7,7 +7,10 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "rn:doctor": "react-native doctor",
+    "build:android": "react-native build-android --mode=release",
+    "build:ios": "react-native build-android --mode=release"
   },
   "dependencies": {
     "@expo-google-fonts/space-grotesk": "^0.2.3",
