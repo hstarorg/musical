@@ -1,87 +1,284 @@
-import React from 'react';
-import {TextStyle, View, ViewStyle} from 'react-native';
-import {Button, Text} from '../../components';
-// import {isRTL} from '../../i18n';
-import {colors, spacing} from '../../theme';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View, Text} from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Slider from '@react-native-community/slider';
+import {WebView} from 'react-native-webview';
+import {MusicInfo, ScreenPropsBase} from '../../types/biz-types';
+import styles from './styles';
+import {musicUtil} from '../../utils/musicUtil';
+import {audioManager, musicService} from '../../services';
+import {AVPlaybackStatus} from 'expo-av';
 
-// const welcomeLogo = require('../../../assets/images/logo.png');
-// const welcomeFace = require('../../../assets/images/welcome-face.png');
+const PlaySortMap = {
+  random: 'shuffle-variant',
+  asc: 'arrow-right',
+};
 
-export function PlayScreen(props: any) {
-  console.log(props);
+let autoChanging = false;
+
+export function PlayScreen(props: ScreenPropsBase) {
   const {navigation} = props;
+  const [audioStatus, setAudioStatus] = useState<
+    AVPlaybackStatus & {isLoaded: true}
+  >();
+  const [playSortType, setPlaySortType] =
+    useState<keyof typeof PlaySortMap>('asc');
+  const [currentMusic, setCurrentMusic] = useState<MusicInfo>();
+  const [refreshCtrl, setRefreshCtrl] = useState({});
 
-  function goNext() {
-    navigation.navigate('Demo', {screen: 'DemoShowroom', params: {}});
+  function updateStatus() {
+    // 设置总时长
+    audioManager.getAudioStatus()?.then(value => {
+      setAudioStatus(value);
+      // 如果没有点击停止，且歌曲放完了，则需要挑选另外一首
+      if (value?.shouldPlay && !value.isPlaying && !autoChanging) {
+        autoChanging = true;
+        // 自动切换下一首
+        musicService
+          .updateCurrentMusic(currentMusic!, 'next', playSortType)
+          .then(() => {
+            loadMusic(value?.shouldPlay);
+          })
+          .finally(() => {
+            autoChanging = false;
+          });
+      }
+    });
+  }
+
+  function loadMusic(autoPlaying: boolean = false) {
+    musicService.getCurrentMusic().then((musicInfo: MusicInfo) => {
+      setCurrentMusic(musicInfo);
+      // 加载音乐
+      audioManager
+        .loadAsync(musicInfo.path)
+        .then(() => {
+          if (autoPlaying) {
+            return audioManager.playAsync();
+          }
+        })
+        .then(() => {
+          setRefreshCtrl({});
+        });
+    });
+  }
+
+  useEffect(() => {
+    loadMusic();
+    return () => {
+      audioManager.stopAsync();
+    };
+  }, []);
+
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      musicService.getCurrentMusic().then((musicInfo: MusicInfo) => {
+        setCurrentMusic(musicInfo);
+      });
+      setRefreshCtrl({});
+    });
+    return () => {
+      unsubscribeFocus();
+    };
+  }, [navigation]);
+
+  useEffect(() => {
+    updateStatus();
+  }, [refreshCtrl]);
+
+  useEffect(() => {
+    let timer = BackgroundTimer.setInterval(() => {
+      setRefreshCtrl({});
+    }, 1000);
+    return () => {
+      BackgroundTimer.clearInterval(timer);
+    };
+  }, []);
+
+  const doPlay = useCallback(() => {
+    if (audioStatus?.isPlaying) {
+      audioManager.pauseAsync();
+    } else {
+      audioManager.playAsync();
+    }
+  }, [audioStatus]);
+
+  const changePrevMusic = useCallback(() => {
+    musicService
+      .updateCurrentMusic(currentMusic!, 'prev', playSortType)
+      .then(() => {
+        loadMusic(audioStatus?.isPlaying);
+      });
+  }, [currentMusic, audioStatus, playSortType]);
+
+  const changeNextMusic = useCallback(() => {
+    musicService
+      .updateCurrentMusic(currentMusic!, 'next', playSortType)
+      .then(() => {
+        loadMusic(audioStatus?.isPlaying);
+      });
+  }, [currentMusic, audioStatus, playSortType]);
+
+  const handleProgressChange = useCallback(value => {
+    audioManager.setPositionAsync(value);
+  }, []);
+
+  const togglePlaySortType = useCallback(() => {
+    const nextPlaySortType = musicUtil.findNextKey(
+      Object.keys(PlaySortMap),
+      playSortType,
+    );
+    setPlaySortType(nextPlaySortType as any);
+  }, [playSortType]);
+
+  // 进度条
+  let progress = 0;
+  let total = 0;
+  if (audioStatus?.isLoaded) {
+    progress = Math.floor(audioStatus.positionMillis / 1000);
+    total = Math.floor((audioStatus.durationMillis || 0) / 1000);
   }
 
   return (
-    <View style={$container}>
-      <View style={$topContainer}>
-        {/* <Image style={$welcomeLogo} source={welcomeLogo} resizeMode="contain" /> */}
+    <View style={styles.playScreen}>
+      <View style={styles.headerArea}>
         <Text
-          testID="welcome-heading"
-          style={$welcomeHeading}
-          tx="welcomeScreen.readyForLaunch"
-          preset="heading">
-          我的是是是是是
+          style={{
+            textAlign: 'center',
+            lineHeight: 40,
+            fontSize: 20,
+            color: '#ddd',
+          }}>
+          Playing
         </Text>
-        <Text tx="welcomeScreen.exciting" preset="subheading" />
-        {/* <Image style={$welcomeFace} source={welcomeFace} resizeMode="contain" /> */}
       </View>
-
-      <View style={[$bottomContainer]}>
-        <Text tx="welcomeScreen.postscript" size="md" />
-
-        <Button
-          testID="next-screen-button"
-          preset="reversed"
-          tx="welcomeScreen.letsGo"
-          onPress={goNext}
+      <View style={styles.graphArea}>
+        <WebView
+          // style={{ backgroundColor: 'red' }}
+          source={{html: '<h1>Hi，研发中，请稍后</h1>'}}
+          javaScriptEnabled={true}
         />
       </View>
+      <View style={styles.infoArea}>
+        <View>
+          <Text style={styles.mainTitle}>{currentMusic?.name}</Text>
+        </View>
+        <View>
+          <Text style={styles.subTitle}>{currentMusic?.path}</Text>
+        </View>
+      </View>
+      <View style={styles.controlArea}>
+        <View style={styles.progressBarArea}>
+          <View style={{width: 50}}>
+            <Text style={{color: '#fff'}}>
+              {musicUtil.duration2TimeStr(audioStatus?.positionMillis)}
+            </Text>
+          </View>
+          <Slider
+            value={progress}
+            minimumValue={0}
+            maximumValue={total}
+            step={1}
+            onSlidingComplete={handleProgressChange}
+            // 已选中部分背景色
+            minimumTrackTintColor="#fff"
+            // 总量背景色
+            // maximumTrackTintColor="blue"
+            // 小圆点颜色
+            // thumbTintColor="#fff"
+            style={{
+              flex: 1,
+              marginTop: 6,
+              height: 7,
+            }}
+          />
+          <View style={{width: 50}}>
+            <Text style={{color: '#fff', textAlign: 'right'}}>
+              {musicUtil.duration2TimeStr(audioStatus?.durationMillis)}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.controlBtnArea}>
+          <MaterialCommunityIcon.Button
+            name={PlaySortMap[playSortType]}
+            onPress={togglePlaySortType}
+            style={{
+              height: 80,
+              padding: 0,
+              paddingLeft: 10,
+            }}
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            color="#fff"
+            size={20}
+          />
+          <EntypoIcon.Button
+            onPress={changePrevMusic}
+            name="controller-jump-to-start"
+            style={{
+              width: 60,
+              height: 80,
+              backgroundColor: 'transparent',
+            }}
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            color="#fff"
+            size={40}
+          />
+          <EntypoIcon.Button
+            onPress={doPlay}
+            name={
+              audioStatus?.isPlaying ? 'controller-paus' : 'controller-play'
+            }
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              backgroundColor: '#fff',
+              paddingLeft: 20,
+            }}
+            color="#000"
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            size={40}
+          />
+          <EntypoIcon.Button
+            onPress={changeNextMusic}
+            name="controller-next"
+            style={{
+              width: 60,
+              height: 80,
+            }}
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            color="#fff"
+            size={40}
+          />
+          <MaterialCommunityIcon.Button
+            name="playlist-music"
+            onPress={() => {
+              navigation.navigate('MusicListScrren');
+            }}
+            style={{
+              height: 80,
+              paddingLeft: 10,
+              paddingRight: 0,
+            }}
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            color="#fff"
+            size={20}
+          />
+        </View>
+      </View>
+      {/* <Button
+        title="点我试试"
+        onPress={() => {
+          navigation.navigate('Page2');
+        }}></Button> */}
+      {/* <Text>P3</Text> */}
     </View>
   );
 }
-
-const $container: ViewStyle = {
-  flex: 1,
-  backgroundColor: colors.background,
-};
-
-const $topContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 1,
-  flexBasis: '57%',
-  justifyContent: 'center',
-  paddingHorizontal: spacing.lg,
-};
-
-const $bottomContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 0,
-  flexBasis: '43%',
-  backgroundColor: colors.palette.neutral100,
-  borderTopLeftRadius: 16,
-  borderTopRightRadius: 16,
-  paddingHorizontal: spacing.lg,
-  justifyContent: 'space-around',
-};
-// const $welcomeLogo: ImageStyle = {
-//   height: 88,
-//   width: '100%',
-//   marginBottom: spacing.xxl,
-// };
-
-// const $welcomeFace: ImageStyle = {
-//   height: 169,
-//   width: 269,
-//   position: 'absolute',
-//   bottom: -47,
-//   right: -80,
-//   transform: [{scaleX: isRTL ? -1 : 1}],
-// };
-
-const $welcomeHeading: TextStyle = {
-  marginBottom: spacing.md,
-};
