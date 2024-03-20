@@ -1,3 +1,3 @@
-export * from './AudioManager';
-export * from './music.service';
-export * from './storage';
+export {audioManager} from './AudioManager';
+export {musicService} from './music.service';
+export {storage} from './storage';

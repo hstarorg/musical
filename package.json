@@ -13,7 +13,8 @@
     "build:android": "cd android && ./gradlew assembleRelease",
     "build:ios": "react-native build-android --mode=release",
     "expo:i": "expo install",
-    "config": "react-native config"
+    "expo:init": "npx install-expo-modules@latest",
+    "rn:config": "react-native config"
   },
   "dependencies": {
     "@expo-google-fonts/space-grotesk": "^0.2.3",
@@ -22,6 +23,7 @@
     "@react-navigation/bottom-tabs": "^6.5.19",
     "@react-navigation/native": "^6.1.16",
     "@shopify/flash-list": "^1.6.3",
+    "@types/react-native-sqlite-storage": "^6.0.5",
     "@types/react-native-vector-icons": "^6.4.18",
     "events": "^3.3.0",
     "expo": "^50.0.13",

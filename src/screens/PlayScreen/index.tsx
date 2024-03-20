@@ -8,13 +8,16 @@ import {WebView} from 'react-native-webview';
 import {MusicInfo, ScreenPropsBase} from '../../types/biz-types';
 import styles from './styles';
 import {musicUtil} from '../../utils/musicUtil';
-import {audioManager, musicService} from '../../services';
+import {audioManager} from '../../services/AudioManager';
+import {musicService} from '../../services/music.service';
 import {AVPlaybackStatus} from 'expo-av';
 
 const PlaySortMap = {
   random: 'shuffle-variant',
   asc: 'arrow-right',
 };
+
+console.log(audioManager, 'good');
 
 let autoChanging = false;
 
@@ -86,7 +89,7 @@ export function PlayScreen(props: ScreenPropsBase) {
 
   useEffect(() => {
     updateStatus();
-  }, [refreshCtrl]);
+  }, []);
 
   useEffect(() => {
     let timer = BackgroundTimer.setInterval(() => {
@@ -121,7 +124,7 @@ export function PlayScreen(props: ScreenPropsBase) {
       });
   }, [currentMusic, audioStatus, playSortType]);
 
-  const handleProgressChange = useCallback(value => {
+  const handleProgressChange = useCallback((value: any) => {
     audioManager.setPositionAsync(value);
   }, []);
 
