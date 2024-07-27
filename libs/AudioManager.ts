@@ -54,8 +54,11 @@ export class AudioManager {
     };
   }
 
-  playAsync() {
-    return this.playbackObject?.playAsync();
+  async playAsync() {
+    const audioStatus = await this.playbackObject?.getStatusAsync();
+    if (audioStatus?.isLoaded) {
+      this.playbackObject?.playAsync();
+    }
   }
 
   pauseAsync() {

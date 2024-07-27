@@ -1,0 +1,1 @@
+export { ViewModelBase } from './ViewModelBase';

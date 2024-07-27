@@ -1,46 +1,59 @@
-import { getFiles } from '@/utils';
-import { useCallback } from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MeScreen() {
-  const test = useCallback(() => {
-    // console.log('documentDirectory', documentDirectory);
-    getFiles(
-      '/',
-      (item) => {
-        return true; // item.endsWith('.mp3');
-      },
-      false
-    ).then((files) => {
-      console.log(files);
-    });
-  }, []);
-
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: '#212121', height: '100%' }}>
+      <View style={styles.header}>
+        <View style={styles.avatorArea}>
+          <Image
+            style={styles.avator}
+            source={require('@/assets/images/icon.png')}
+          />
+        </View>
+        <View style={styles.userInfo}>
+          <View>
+            <Text style={styles.userInfo_text}>Jay Hu</Text>
+            <Text style={styles.userInfo_bio_text}>
+              Love life, love coding...
+            </Text>
+          </View>
+        </View>
+      </View>
       <View>
-        <Button onPress={test} title="点我扫描" />
+        <Text style={{ textAlign: 'center' }}>Coming Soon...</Text>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  header: {
+    padding: 16,
+    height: 96,
+    display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    backgroundColor: '#fff',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  avatorArea: {
+    width: 64,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  avator: {
+    height: 64,
+    width: 64,
+    borderRadius: 32,
+  },
+  userInfo: {
+    flex: 1,
+    paddingLeft: 8,
+    paddingTop: 8,
+  },
+  userInfo_text: {
+    color: '#000000',
+    fontSize: 20,
+  },
+  userInfo_bio_text: {
+    color: 'gray',
+    fontSize: 14,
   },
 });

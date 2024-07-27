@@ -1,4 +1,4 @@
-import { Alert, PermissionsAndroid } from 'react-native';
+import { Alert, PermissionsAndroid, Platform } from 'react-native';
 import { MusicInfo } from '@/types/music-types';
 import { DbService } from './db.service';
 import { requestPermissionAndroid, getFiles } from '@/utils';
@@ -20,7 +20,7 @@ class MusicService {
   /**
    * 查询音乐列表
    */
-  queryMusicList() {
+  queryMusicList(): Promise<MusicInfo[]> {
     return this.db.find('SELECT * FROM music;');
   }
 
@@ -125,18 +125,23 @@ class MusicService {
    * @returns
    */
   async scanAndStoreLocalMusics() {
-    // 申请权限
-    const granted = await requestPermissionAndroid(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-    );
+    if (Platform.OS === 'android') {
+      // 申请权限
+      const granted = await requestPermissionAndroid(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+      );
 
-    if (!granted) {
-      Alert.alert('您未允许授权');
-      return;
+      if (!granted) {
+        Alert.alert('您未允许授权');
+        return;
+      }
+    } else if (Platform.OS === 'ios') {
+      // ios 无需申请权限
     }
+
     // 允许授权时，先筛选音乐文件，然后写入 DB
     const files = await getFiles(
-      documentDirectory!,
+      '/',
       (item: string) => {
         return item.endsWith('.mp3');
       },
@@ -152,6 +157,10 @@ class MusicService {
     // 执行
     await Promise.all(sqlTasks);
     Alert.alert('扫描完毕');
+  }
+
+  async addMusicList(musicList: MusicInfo[]) {
+    await Promise.all(musicList.map((x) => this.insertMusic(x)));
   }
 
   /**

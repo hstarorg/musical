@@ -1,98 +1,41 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import BackgroundTimer from 'react-native-background-timer';
 import Slider from '@react-native-community/slider';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-// import { WebView } from 'react-native-webview';
-// import { MusicInfo, ScreenPropsBase } from '../../types/biz-types';
-// import styles from './styles';
-// import { musicUtil } from '../../utils/musicUtil';
-import { AudioManager } from '@/libs';
-import { musicService } from '@/services';
-import { AVPlaybackStatus } from 'expo-av';
-import { MusicInfo } from '@/types/music-types';
-import { musicUtil } from '@/utils';
+import { WebView } from 'react-native-webview';
+import * as BackgroundFetch from 'expo-background-fetch';
+import * as TaskManager from 'expo-task-manager';
 
-const PlaySortMap = {
-  random: 'shuffle-variant',
-  asc: 'arrow-right',
-};
+import { globalVm } from '../globalVm';
+import { MusicPlaySortEnum } from '@/constants';
 
-let autoChanging = false;
+// TaskManager.defineTask('updateAudioStatus', async () => {
+//   console.log('task run');
+//   globalVm.updateAudioStatus();
+// });
 
 export default function PlayScreen() {
-  const audioManagerSignleton = AudioManager.instance;
-
-  const [audioStatus, setAudioStatus] = useState<
-    AVPlaybackStatus & { isLoaded: true }
-  >();
-  const [playSortType, setPlaySortType] =
-    useState<keyof typeof PlaySortMap>('asc');
-  const [currentMusic, setCurrentMusic] = useState<MusicInfo>();
-  const [refreshCtrl, setRefreshCtrl] = useState({});
-
-  function updateStatus() {
-    // 设置总时长
-    audioManagerSignleton.getAudioStatus()?.then((value) => {
-      setAudioStatus(value);
-      // 如果没有点击停止，且歌曲放完了，则需要挑选另外一首
-      if (value?.shouldPlay && !value.isPlaying && !autoChanging) {
-        autoChanging = true;
-        // 自动切换下一首
-        musicService
-          .updateCurrentMusic(currentMusic!, 'next', playSortType)
-          .then(() => {
-            loadMusic(value?.shouldPlay);
-          })
-          .finally(() => {
-            autoChanging = false;
-          });
-      }
-    });
-  }
-
-  async function loadMusic(autoPlaying: boolean = false) {
-    const musicInfo = (await musicService.getCurrentMusic()) as MusicInfo;
-    if (musicInfo) {
-      setCurrentMusic(musicInfo);
-      // 加载音乐
-      audioManagerSignleton
-        .loadAsync(musicInfo.path)
-        .then(() => {
-          if (autoPlaying) {
-            return audioManagerSignleton.playAsync();
-          }
-        })
-        .then(() => {
-          setRefreshCtrl({});
-        });
-    }
-  }
+  const globalVmData = globalVm.$useSnapshot();
 
   useEffect(() => {
-    loadMusic();
+    globalVm.loadCurrentMusic();
+    // BackgroundFetch.registerTaskAsync('updateAudioStatus', {
+    //   minimumInterval: 1,
+    // });
+
+    const unregister = globalVm.initPlaybackStatusUpdateNotification();
+
+    // setInterval(() => {
+    //   globalVm.updateAudioStatus();
+    // }, 1000);
+
     return () => {
-      audioManagerSignleton.stopAsync();
+      unregister();
     };
-  }, []);
-
-  // useEffect(() => {
-  //   const unsubscribeFocus = navigation.addListener('focus', async () => {
-  //     const musicInfo = await musicService.getCurrentMusic();
-  //     if (musicInfo) {
-  //       setCurrentMusic(musicInfo);
-  //       setRefreshCtrl({});
-  //     }
-  //   });
-  //   return () => {
-  //     unsubscribeFocus();
-  //   };
-  // }, [navigation]);
-
-  useEffect(() => {
-    updateStatus();
   }, []);
 
   // useEffect(() => {
@@ -104,194 +47,148 @@ export default function PlayScreen() {
   //   };
   // }, []);
 
-  const doPlay = useCallback(() => {
-    if (audioStatus?.isPlaying) {
-      audioManagerSignleton.pauseAsync();
-    } else {
-      audioManagerSignleton.playAsync();
-    }
-  }, [audioStatus]);
-
-  const changePrevMusic = useCallback(() => {
-    musicService
-      .updateCurrentMusic(currentMusic!, 'prev', playSortType)
-      .then(() => {
-        loadMusic(audioStatus?.isPlaying);
-      });
-  }, [currentMusic, audioStatus, playSortType]);
-
-  const changeNextMusic = useCallback(() => {
-    musicService
-      .updateCurrentMusic(currentMusic!, 'next', playSortType)
-      .then(() => {
-        loadMusic(audioStatus?.isPlaying);
-      });
-  }, [currentMusic, audioStatus, playSortType]);
-
-  const handleProgressChange = useCallback((value: any) => {
-    audioManagerSignleton.setPositionAsync(value);
-  }, []);
-
-  const togglePlaySortType = useCallback(() => {
-    const nextPlaySortType = musicUtil.findNextKey(
-      Object.keys(PlaySortMap),
-      playSortType
-    );
-    setPlaySortType(nextPlaySortType as any);
-  }, [playSortType]);
-
-  // 进度条
-  let progress = 0;
-  let total = 0;
-  if (audioStatus?.isLoaded) {
-    progress = Math.floor(audioStatus.positionMillis / 1000);
-    total = Math.floor((audioStatus.durationMillis || 0) / 1000);
-  }
+  const { currentMusic, progressInfo } = globalVmData;
 
   return (
-    <View style={styles.playScreen}>
-      <View style={styles.headerArea}>
-        <Text
-          style={{
-            textAlign: 'center',
-            lineHeight: 40,
-            fontSize: 20,
-            color: '#ddd',
-          }}
-        >
-          Playing
-        </Text>
-      </View>
-      <View style={styles.graphArea}>
-        {/* <WebView
-          // style={{ backgroundColor: 'red' }}
-          source={{ html: '<h1>Hi，研发中，请稍后</h1>' }}
-          javaScriptEnabled={true}
-        /> */}
-      </View>
-      <View style={styles.infoArea}>
-        <View>
-          <Text style={styles.mainTitle}>{currentMusic?.name}</Text>
-        </View>
-        <View>
-          <Text style={styles.subTitle}>{currentMusic?.path}</Text>
-        </View>
-      </View>
-      <View style={styles.controlArea}>
-        <View style={styles.progressBarArea}>
-          <View style={{ width: 50 }}>
-            <Text style={{ color: '#fff' }}>
-              {musicUtil.duration2TimeStr(audioStatus?.positionMillis)}
-            </Text>
-          </View>
-          <Slider
-            value={progress}
-            minimumValue={0}
-            maximumValue={total}
-            step={1}
-            onSlidingComplete={handleProgressChange}
-            // 已选中部分背景色
-            minimumTrackTintColor="#fff"
-            // 总量背景色
-            // maximumTrackTintColor="blue"
-            // 小圆点颜色
-            // thumbTintColor="#fff"
+    <SafeAreaView>
+      <View style={styles.playScreen}>
+        <View style={styles.headerArea}>
+          <Text
             style={{
-              flex: 1,
-              marginTop: 6,
-              height: 7,
+              textAlign: 'center',
+              lineHeight: 40,
+              fontSize: 20,
+              color: '#ddd',
             }}
+          >
+            Play
+          </Text>
+        </View>
+        <View style={styles.graphArea}>
+          <WebView
+            // style={{ backgroundColor: 'red' }}
+            source={{ html: '<h1>Coming soon...</h1>' }}
+            javaScriptEnabled={true}
           />
-          <View style={{ width: 50 }}>
-            <Text style={{ color: '#fff', textAlign: 'right' }}>
-              {musicUtil.duration2TimeStr(audioStatus?.durationMillis)}
-            </Text>
+        </View>
+        <View style={styles.infoArea}>
+          <View style={{ paddingLeft: 16, paddingRight: 16 }}>
+            <Text style={styles.mainTitle}>{currentMusic?.name}</Text>
+          </View>
+          <View style={{ overflow: 'hidden', height: 40 }}>
+            <Text style={styles.subTitle}>{currentMusic?.path}</Text>
           </View>
         </View>
-        <View style={styles.controlBtnArea}>
-          <MaterialCommunityIcons.Button
-            name={PlaySortMap[playSortType] as any}
-            onPress={togglePlaySortType}
-            style={{
-              height: 80,
-              padding: 0,
-              paddingLeft: 10,
-            }}
-            backgroundColor="transparent"
-            underlayColor="transparent"
-            color="#fff"
-            size={20}
-          />
-          <Entypo.Button
-            onPress={changePrevMusic}
-            name="controller-jump-to-start"
-            style={{
-              width: 60,
-              height: 80,
-              backgroundColor: 'transparent',
-            }}
-            backgroundColor="transparent"
-            underlayColor="transparent"
-            color="#fff"
-            size={40}
-          />
-          <Feather.Button
-            name={audioStatus?.isPlaying ? 'pause' : 'play'}
-            onPress={doPlay}
-            style={{
-              width: 80,
-              height: 80,
-              borderRadius: 40,
-              backgroundColor: '#fff',
-              paddingLeft: 24,
-            }}
-            color="#000"
-            backgroundColor="transparent"
-            underlayColor="transparent"
-            size={40}
-          />
-          <Entypo.Button
-            onPress={changeNextMusic}
-            name="controller-next"
-            style={{
-              width: 60,
-              height: 80,
-            }}
-            backgroundColor="transparent"
-            underlayColor="transparent"
-            color="#fff"
-            size={40}
-          />
-          <MaterialCommunityIcons.Button
-            name="playlist-music"
-            onPress={() => {
-              // navigation.navigate('MusicListScrren');
-            }}
-            style={{
-              height: 80,
-              paddingLeft: 10,
-              paddingRight: 0,
-            }}
-            backgroundColor="transparent"
-            underlayColor="transparent"
-            color="#fff"
-            size={20}
-          />
+        <View style={styles.controlArea}>
+          <View style={styles.progressBarArea}>
+            <View style={{ width: 50, height: 20 }}>
+              <Text style={{ color: '#fff' }}>
+                {progressInfo.positionMillis}
+              </Text>
+            </View>
+            <Slider
+              style={{ flex: 1, height: 20, maxHeight: 20 }}
+              value={progressInfo.progress}
+              onSlidingComplete={globalVm.handleProcessChange}
+              step={1}
+              minimumValue={0}
+              maximumValue={progressInfo.total}
+              minimumTrackTintColor="#fff"
+            />
+            <View style={{ width: 50, height: 20 }}>
+              <Text style={{ color: '#fff', textAlign: 'right' }}>
+                {progressInfo.durationMillis}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.controlBtnArea}>
+            <MaterialCommunityIcons.Button
+              name={
+                globalVmData.musicPlaySort === MusicPlaySortEnum.Random
+                  ? 'shuffle-variant'
+                  : 'arrow-right'
+              }
+              onPress={globalVm.togglePlaySortType}
+              style={{
+                height: 80,
+                padding: 0,
+                paddingLeft: 10,
+              }}
+              backgroundColor="transparent"
+              underlayColor="transparent"
+              color="#fff"
+              size={20}
+            />
+            <Entypo.Button
+              onPress={globalVm.preMusic}
+              name="controller-jump-to-start"
+              style={{
+                width: 60,
+                height: 80,
+                backgroundColor: 'transparent',
+              }}
+              backgroundColor="transparent"
+              underlayColor="transparent"
+              color="#fff"
+              size={40}
+            />
+            <Feather.Button
+              name={globalVmData.isPlaying ? 'pause' : 'play'}
+              onPress={globalVm.togglePlay}
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 40,
+                backgroundColor: '#fff',
+                paddingLeft: globalVmData.isPlaying ? 20 : 24,
+              }}
+              color="#000"
+              backgroundColor="transparent"
+              underlayColor="transparent"
+              size={40}
+            />
+            <Entypo.Button
+              onPress={globalVm.nextMusic}
+              name="controller-next"
+              style={{
+                width: 60,
+                height: 80,
+              }}
+              backgroundColor="transparent"
+              underlayColor="transparent"
+              color="#fff"
+              size={40}
+            />
+            <MaterialCommunityIcons.Button
+              name="playlist-music"
+              onPress={() => {
+                // navigation.navigate('MusicListScrren');
+              }}
+              style={{
+                height: 80,
+                paddingLeft: 10,
+                paddingRight: 0,
+              }}
+              backgroundColor="transparent"
+              underlayColor="transparent"
+              color="#fff"
+              size={20}
+            />
+          </View>
         </View>
-      </View>
-      {/* <Button
+        {/* <Button
         title="点我试试"
         onPress={() => {
           navigation.navigate('Page2');
         }}></Button> */}
-      {/* <Text>P3</Text> */}
-    </View>
+        {/* <Text>P3</Text> */}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   playScreen: {
-    // backgroundColor: 'linear-gradient(45deg, black, transparent)',
     backgroundColor: '#212121',
     height: '100%',
     color: '#eee',

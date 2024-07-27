@@ -1,56 +1,11 @@
 import { Linking, PermissionsAndroid } from 'react-native';
-import { Edge, useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /**
  * Helper for opening a give URL in an external browser.
  */
 export function openLinkInBrowser(url: string) {
   Linking.canOpenURL(url).then((canOpen) => canOpen && Linking.openURL(url));
-}
-
-export type ExtendedEdge = Edge | 'start' | 'end';
-
-const propertySuffixMap = {
-  top: 'Top',
-  bottom: 'Bottom',
-  left: 'Start',
-  right: 'End',
-  start: 'Start',
-  end: 'End',
-};
-
-const edgeInsetMap: Record<string, Edge> = {
-  start: 'left',
-  end: 'right',
-};
-
-export type SafeAreaInsetsStyle<
-  Property extends 'padding' | 'margin' = 'padding',
-  Edges extends Array<ExtendedEdge> = Array<ExtendedEdge>
-> = {
-  [K in Edges[number] as `${Property}${Capitalize<K>}`]: number;
-};
-
-/**
- * A hook that can be used to create a safe-area-aware style object that can be passed directly to a View.
- * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/utility/useSafeAreaInsetsStyle/}
- * @param {ExtendedEdge[]} safeAreaEdges - The edges to apply the safe area insets to.
- * @param {"padding" | "margin"} property - The property to apply the safe area insets to.
- * @returns {SafeAreaInsetsStyle<Property, Edges>} - The style object with the safe area insets applied.
- */
-export function useSafeAreaInsetsStyle<
-  Property extends 'padding' | 'margin' = 'padding',
-  Edges extends Array<ExtendedEdge> = []
->(
-  safeAreaEdges: Edges = [] as unknown as Edges,
-  property: Property = 'padding' as Property
-): SafeAreaInsetsStyle<Property, Edges> {
-  const insets = useSafeAreaInsets();
-
-  return safeAreaEdges.reduce((acc, e) => {
-    const value = edgeInsetMap[e] ?? e;
-    return { ...acc, [`${property}${propertySuffixMap[e]}`]: insets[value] };
-  }, {}) as SafeAreaInsetsStyle<Property, Edges>;
 }
 
 export async function requestPermissionAndroid(permissionName: any) {
@@ -66,3 +21,38 @@ export async function requestPermissionAndroid(permissionName: any) {
     return value === PermissionsAndroid.RESULTS.GRANTED;
   });
 }
+
+export const asyncStorage = {
+  async setData(
+    key: string,
+    value: unknown,
+    options: { expires?: number } = {}
+  ) {
+    const cacheItem = {
+      data: value,
+      expires: options.expires ? Date.now() + options.expires : 0,
+      $from: 'asyncStorage',
+    };
+    await AsyncStorage.setItem(key, JSON.stringify(cacheItem));
+    return true;
+  },
+
+  async getData(key: string) {
+    try {
+      const cacheItem = await AsyncStorage.getItem(key);
+      const cacheObj = JSON.parse(cacheItem || '');
+      if (cacheObj.$from !== 'asyncStorage') {
+        return null;
+      }
+      // expired
+      if (cacheObj.expires > 0 && cacheObj.expires < Date.now()) {
+        // remove item, but not blocking code
+        AsyncStorage.removeItem(key);
+        return null;
+      }
+      return cacheObj.data;
+    } catch (e) {
+      return null;
+    }
+  },
+};
