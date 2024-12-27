@@ -11,7 +11,8 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "expo:i": "expo install",
-    "build:android": "eas build --profile preview --platform android"
+    "build:android": "eas build --profile preview --platform android",
+    "build-local:android": "eas build --platform android --local"
   },
   "jest": {
     "preset": "jest-expo"
@@ -59,5 +60,6 @@
     "react-test-renderer": "18.2.0",
     "typescript": "~5.3.3"
   },
-  "private": true
+  "private": true,
+  "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
 }
