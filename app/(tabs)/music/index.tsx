@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import AntIcon from '@expo/vector-icons/AntDesign';
-import { globalVm } from '../globalVm';
+import { globalVm } from '@/app-vms/globalVm';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default () => {

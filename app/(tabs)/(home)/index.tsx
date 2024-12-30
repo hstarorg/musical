@@ -10,7 +10,7 @@ import { WebView } from 'react-native-webview';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 
-import { globalVm } from '../globalVm';
+import { globalVm } from '@/app-vms/globalVm';
 import { MusicPlaySortEnum } from '@/constants';
 
 // TaskManager.defineTask('updateAudioStatus', async () => {

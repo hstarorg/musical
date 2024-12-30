@@ -8,7 +8,6 @@ import { Alert } from 'react-native';
 import { getFiles, musicUtil } from '@/utils';
 import { AMEventNames } from '@/libs/AudioManager';
 import { AVPlaybackStatusError, AVPlaybackStatusSuccess } from 'expo-av';
-import { documentDirectory } from 'expo-file-system';
 
 type PageData = {
   musicList: MusicInfo[];
