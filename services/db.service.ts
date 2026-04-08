@@ -20,4 +20,8 @@ export class DbService {
   async execute(sql: string, params?: SQLite.SQLiteBindParams) {
     return this.db.runAsync(sql, params || {});
   }
+
+  async withTransaction(task: () => Promise<void>) {
+    return this.db.withTransactionAsync(task);
+  }
 }
