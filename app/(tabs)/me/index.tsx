@@ -101,7 +101,7 @@ export default function MeScreen() {
           ]}
           onPress={() => meVm.setActiveTab('history')}
         >
-          <AntDesign name="clockcircleo" size={14} color={meData.activeTab === 'history' ? theme.tint : theme.textSecondary} />
+          <MaterialCommunityIcons name="history" size={14} color={meData.activeTab === 'history' ? theme.tint : theme.textSecondary} />
           <Text
             style={[
               styles.tabText,

@@ -205,11 +205,11 @@ class MusicService {
 
     // 增量对比：只插入 DB 中不存在的新文件
     const existingPaths = await this.queryExistingPaths();
-    const newFiles = files.filter((file) => !existingPaths.has(file.uri));
+    const newFiles = files.filter((file) => file.uri && !existingPaths.has(file.uri));
 
     if (newFiles.length > 0) {
       await this.addMusicListBatch(
-        newFiles.map((file) => ({ name: file.uri, path: file.uri }))
+        newFiles.map((file) => ({ name: file.uri!, path: file.uri! }))
       );
     }
 
