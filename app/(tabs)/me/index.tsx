@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { meVm } from '@/app-vms/meVm';
@@ -16,7 +16,7 @@ import { playerVm } from '@/app-vms/playerVm';
 import { MusicInfo } from '@/types/music-types';
 
 export default function MeScreen() {
-  const colorScheme = useColorScheme() ?? 'dark';
+  const colorScheme = useColorScheme();
   const theme = Colors[colorScheme];
   const meData = meVm.$useSnapshot();
 
@@ -76,7 +76,7 @@ export default function MeScreen() {
           ]}
           onPress={() => meVm.setActiveTab('favorites')}
         >
-          <AntDesign name="heart" size={14} color={meData.activeTab === 'favorites' ? theme.tint : theme.textSecondary} />
+          <MaterialCommunityIcons name="heart" size={14} color={meData.activeTab === 'favorites' ? theme.tint : theme.textSecondary} />
           <Text
             style={[
               styles.tabText,

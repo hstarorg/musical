@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '@react-native-community/slider';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { WebView } from 'react-native-webview';
 
@@ -22,7 +21,7 @@ const PlaySortIcons: Record<MusicPlaySortEnum, string> = {
 
 export default function PlayScreen() {
   const playerData = playerVm.$useSnapshot();
-  const colorScheme = useColorScheme() ?? 'dark';
+  const colorScheme = useColorScheme();
   const theme = Colors[colorScheme];
 
   useEffect(() => {
@@ -127,8 +126,8 @@ export default function PlayScreen() {
               color={theme.tint}
               size={40}
             />
-            <AntDesign.Button
-              name={playerData.isFavorite ? 'heart' : 'hearto'}
+            <MaterialCommunityIcons.Button
+              name={playerData.isFavorite ? 'heart' : 'heart-outline'}
               onPress={playerVm.toggleFavorite}
               style={{ height: 80, paddingLeft: 10, paddingRight: 0 }}
               backgroundColor="transparent"

@@ -19,7 +19,7 @@ import { musicUtil } from '@/utils';
 
 export default function MusicScreen() {
   const libraryData = libraryVm.$useSnapshot();
-  const colorScheme = useColorScheme() ?? 'dark';
+  const colorScheme = useColorScheme();
   const theme = Colors[colorScheme];
 
   useEffect(() => {
