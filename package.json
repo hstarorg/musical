@@ -23,6 +23,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@shopify/react-native-skia": "^2.6.2",
+    "buffer": "^6.0.3",
     "events": "^3.3.0",
     "expo": "~55.0.12",
     "expo-audio": "^55.0.12",

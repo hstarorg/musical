@@ -1,7 +1,8 @@
-import * as expoDocumentPicker from 'expo-document-picker';
+import { ViewModelBase } from '@/libs/bizify';
 import { musicService } from '@/services';
 import { MusicInfo } from '@/types/music-types';
-import { ViewModelBase } from '@/libs/bizify';
+import { extractMusicInfo } from '@/utils/metadata';
+import * as expoDocumentPicker from 'expo-document-picker';
 import { Alert } from 'react-native';
 
 type LibraryData = {
@@ -18,21 +19,26 @@ class LibraryViewModel extends ViewModelBase<LibraryData> {
   async loadMusicList() {
     const musicList = await musicService.queryMusicList();
     this.data.musicList = musicList;
+    console.log(musicList);
   }
 
   async selectMusicFiles() {
     const result = await expoDocumentPicker.getDocumentAsync({
       type: 'audio/*',
+      multiple: true,
     });
     if (result.canceled || result.assets.length === 0) {
       return;
     }
 
-    await musicService.addMusicListBatch(
-      result.assets.map((x) => ({ name: x.name, path: x.uri }))
+    // 提取每个文件的元数据（名称清洗、时长、艺术家）
+    const musicList: MusicInfo[] = await Promise.all(
+      result.assets.map((asset) => extractMusicInfo(asset.name, asset.uri)),
     );
+
+    await musicService.addMusicListBatch(musicList);
     await this.loadMusicList();
-    Alert.alert('添加成功');
+    Alert.alert('添加成功', `已添加 ${musicList.length} 首歌曲`);
   }
 
   async scanMusic() {

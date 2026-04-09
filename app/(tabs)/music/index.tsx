@@ -3,10 +3,7 @@ import {
   View,
   StatusBar,
   FlatList,
-  Image,
-  Text,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
 import AntIcon from '@expo/vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,7 +12,7 @@ import { libraryVm } from '@/app-vms/libraryVm';
 import { playerVm } from '@/app-vms/playerVm';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { musicUtil } from '@/utils';
+import { MusicItem } from '@/components/MusicItem';
 
 export default function MusicScreen() {
   const libraryData = libraryVm.$useSnapshot();
@@ -60,49 +57,14 @@ export default function MusicScreen() {
           </View>
           <FlatList
             data={libraryData.musicList}
+            keyExtractor={(item) => String(item.id)}
             style={{ paddingHorizontal: 16 }}
-            renderItem={(info) => {
-              const musicInfo = info.item;
-              return (
-                <TouchableOpacity
-                  onPress={() => playerVm.selectMusic(musicInfo)}
-                >
-                  <View
-                    key={musicInfo.id!}
-                    style={[
-                      styles.musicItem,
-                      { borderBottomColor: theme.border },
-                    ]}
-                  >
-                    <View>
-                      <Image
-                        source={require('@/assets/images/icon.png')}
-                        style={{ width: 40, height: 40, borderRadius: 4 }}
-                      />
-                    </View>
-                    <View style={{ paddingLeft: 12, flex: 1 }}>
-                      <Text
-                        style={{ fontSize: 16, lineHeight: 20, color: theme.text }}
-                      >
-                        {musicInfo.name}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          lineHeight: 20,
-                          color: theme.textSecondary,
-                        }}
-                      >
-                        {musicInfo.artist || '未知艺术家'}
-                        {musicInfo.duration
-                          ? ` · ${musicUtil.duration2TimeStr(musicInfo.duration)}`
-                          : ''}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
+            renderItem={({ item }) => (
+              <MusicItem
+                music={item}
+                onPress={(m) => playerVm.selectMusic(m)}
+              />
+            )}
           />
         </>
       )}
@@ -115,11 +77,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  musicItem: {
-    flexDirection: 'row',
-    height: 80,
-    borderBottomWidth: 1,
-    paddingTop: 20,
   },
 });

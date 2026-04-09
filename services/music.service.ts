@@ -55,6 +55,9 @@ class MusicService {
     await this.tryAddColumn('music', 'duration', 'integer');
     await this.tryAddColumn('music', 'artist', 'varchar(200)');
     await this.tryAddColumn('music', 'album', 'varchar(200)');
+    await this.tryAddColumn('music', 'artwork', 'text');
+    await this.tryAddColumn('music', 'track', 'integer');
+    await this.tryAddColumn('music', 'year', 'integer');
 
     // 收藏表
     await this.db.execute(`
@@ -245,7 +248,8 @@ class MusicService {
    */
   private insertMusic(musicInfo: MusicInfo) {
     const sql = `
-    INSERT OR IGNORE INTO music(name, path, duration, artist, album) VALUES(?, ?, ?, ?, ?);
+    INSERT OR IGNORE INTO music(name, path, duration, artist, album, artwork, track, year)
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?);
     `;
     return this.db.execute(sql, [
       musicInfo.name,
@@ -253,6 +257,9 @@ class MusicService {
       musicInfo.duration ?? null,
       musicInfo.artist ?? null,
       musicInfo.album ?? null,
+      musicInfo.artwork ?? null,
+      musicInfo.track ?? null,
+      musicInfo.year ?? null,
     ]);
   }
 

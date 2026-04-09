@@ -13,7 +13,7 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { meVm } from '@/app-vms/meVm';
 import { playerVm } from '@/app-vms/playerVm';
-import { MusicInfo } from '@/types/music-types';
+import { MusicItem } from '@/components/MusicItem';
 
 export default function MeScreen() {
   const colorScheme = useColorScheme();
@@ -23,25 +23,6 @@ export default function MeScreen() {
   useEffect(() => {
     meVm.loadFavorites();
   }, []);
-
-  const renderMusicItem = (music: MusicInfo) => (
-    <TouchableOpacity onPress={() => playerVm.selectMusic(music)}>
-      <View style={[styles.musicItem, { borderBottomColor: theme.border }]}>
-        <Image
-          source={require('@/assets/images/icon.png')}
-          style={{ width: 36, height: 36, borderRadius: 4 }}
-        />
-        <View style={{ paddingLeft: 12, flex: 1 }}>
-          <Text style={{ fontSize: 14, color: theme.text }} numberOfLines={1}>
-            {music.name}
-          </Text>
-          <Text style={{ fontSize: 12, color: theme.textSecondary }}>
-            {music.artist || '未知艺术家'}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>
@@ -129,7 +110,9 @@ export default function MeScreen() {
             data={meData.favorites}
             keyExtractor={(item) => String(item.id)}
             style={{ paddingHorizontal: 16 }}
-            renderItem={({ item }) => renderMusicItem(item)}
+            renderItem={({ item }) => (
+              <MusicItem music={item} onPress={(m) => playerVm.selectMusic(m)} />
+            )}
           />
         )
       ) : (meData.history?.length ?? 0) === 0 ? (
@@ -148,7 +131,9 @@ export default function MeScreen() {
             data={meData.history}
             keyExtractor={(item, index) => `${item.id}-${index}`}
             style={{ paddingHorizontal: 16 }}
-            renderItem={({ item }) => renderMusicItem(item)}
+            renderItem={({ item }) => (
+              <MusicItem music={item} onPress={(m) => playerVm.selectMusic(m)} />
+            )}
           />
         </>
       )}
@@ -205,11 +190,5 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: 16,
     paddingVertical: 8,
-  },
-  musicItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 64,
-    borderBottomWidth: 1,
   },
 });
