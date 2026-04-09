@@ -55,6 +55,9 @@ class MusicService {
     await this.tryAddColumn('music', 'duration', 'integer');
     await this.tryAddColumn('music', 'artist', 'varchar(200)');
     await this.tryAddColumn('music', 'album', 'varchar(200)');
+    await this.tryAddColumn('music', 'artwork', 'text');
+    await this.tryAddColumn('music', 'track', 'integer');
+    await this.tryAddColumn('music', 'year', 'integer');
 
     // 收藏表
     await this.db.execute(`
@@ -245,7 +248,8 @@ class MusicService {
    */
   private insertMusic(musicInfo: MusicInfo) {
     const sql = `
-    INSERT OR IGNORE INTO music(name, path, duration, artist, album) VALUES(?, ?, ?, ?, ?);
+    INSERT OR IGNORE INTO music(name, path, duration, artist, album, artwork, track, year)
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?);
     `;
     return this.db.execute(sql, [
       musicInfo.name,
@@ -253,7 +257,23 @@ class MusicService {
       musicInfo.duration ?? null,
       musicInfo.artist ?? null,
       musicInfo.album ?? null,
+      musicInfo.artwork ?? null,
+      musicInfo.track ?? null,
+      musicInfo.year ?? null,
     ]);
+  }
+
+  /**
+   * 删除音乐（同时清理关联的收藏、历史、队列记录）
+   */
+  async deleteMusic(musicId: number) {
+    await this.ensureInit();
+    await this.db.withTransaction(async () => {
+      await this.db.execute('DELETE FROM favorites WHERE music_id = ?;', [musicId]);
+      await this.db.execute('DELETE FROM play_history WHERE music_id = ?;', [musicId]);
+      await this.db.execute('DELETE FROM play_queue WHERE music_id = ?;', [musicId]);
+      await this.db.execute('DELETE FROM music WHERE id = ?;', [musicId]);
+    });
   }
 
   // ==================== 收藏 ====================

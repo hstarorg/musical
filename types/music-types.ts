@@ -5,4 +5,7 @@ export type MusicInfo = {
   duration?: number;
   artist?: string;
   album?: string;
+  artwork?: string;
+  track?: number;
+  year?: number;
 };

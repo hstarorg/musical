@@ -18,6 +18,19 @@ All commands should be run from the `musical/` directory:
 cd musical
 pnpm install              # Install dependencies
 pnpm start                # Start Expo dev server
+```
+
+### Special Setup
+
+After `pnpm install`, need to install Skia prebuilt binaries (required by `@shopify/react-native-skia`):
+
+```bash
+node node_modules/@shopify/react-native-skia/scripts/install-libs.js
+```
+
+### Dev & Build
+
+```
 pnpm ios                  # Run on iOS simulator
 pnpm android              # Run on Android emulator
 pnpm web                  # Run web version

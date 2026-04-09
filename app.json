@@ -19,8 +19,6 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
       "package": "org.hstar.musical"
     },
     "web": {
@@ -42,20 +40,22 @@
         }
       ],
       "expo-font",
-      "expo-image",
-      "expo-web-browser",
       [
         "expo-build-properties",
         {
           "ios": {
             "deploymentTarget": "16.0"
+          },
+          "android": {
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "buildArchs": ["arm64-v8a"]
           }
         }
       ]
     ],
     "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
+      "typedRoutes": true
     }
   }
 }

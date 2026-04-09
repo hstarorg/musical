@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import {
   View,
   StatusBar,
-  FlatList,
-  Image,
-  Text,
   StyleSheet,
+  Text,
   TouchableOpacity,
 } from 'react-native';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import AntIcon from '@expo/vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,7 +14,7 @@ import { libraryVm } from '@/app-vms/libraryVm';
 import { playerVm } from '@/app-vms/playerVm';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { musicUtil } from '@/utils';
+import { MusicItem, MUSIC_ITEM_HEIGHT } from '@/components/MusicItem';
 
 export default function MusicScreen() {
   const libraryData = libraryVm.$useSnapshot();
@@ -27,6 +26,10 @@ export default function MusicScreen() {
   }, []);
 
   const isMusicListEmpty = (libraryData.musicList?.length ?? 0) === 0;
+
+  const handleDelete = (music: typeof libraryData.musicList[number]) => {
+    libraryVm.deleteMusic(music);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>
@@ -58,51 +61,30 @@ export default function MusicScreen() {
               Add Music
             </AntIcon.Button>
           </View>
-          <FlatList
-            data={libraryData.musicList}
+          <SwipeListView
+            data={[...libraryData.musicList]}
+            keyExtractor={(item) => String(item.id)}
             style={{ paddingHorizontal: 16 }}
-            renderItem={(info) => {
-              const musicInfo = info.item;
-              return (
+            renderItem={({ item }) => (
+              <View style={{ backgroundColor: theme.surface }}>
+                <MusicItem
+                  music={item}
+                  onPress={(m) => playerVm.selectMusic(m)}
+                />
+              </View>
+            )}
+            renderHiddenItem={({ item }) => (
+              <View style={[styles.hiddenRow, { height: MUSIC_ITEM_HEIGHT }]}>
                 <TouchableOpacity
-                  onPress={() => playerVm.selectMusic(musicInfo)}
+                  style={styles.deleteBtn}
+                  onPress={() => handleDelete(item)}
                 >
-                  <View
-                    key={musicInfo.id!}
-                    style={[
-                      styles.musicItem,
-                      { borderBottomColor: theme.border },
-                    ]}
-                  >
-                    <View>
-                      <Image
-                        source={require('@/assets/images/icon.png')}
-                        style={{ width: 40, height: 40, borderRadius: 4 }}
-                      />
-                    </View>
-                    <View style={{ paddingLeft: 12, flex: 1 }}>
-                      <Text
-                        style={{ fontSize: 16, lineHeight: 20, color: theme.text }}
-                      >
-                        {musicInfo.name}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          lineHeight: 20,
-                          color: theme.textSecondary,
-                        }}
-                      >
-                        {musicInfo.artist || '未知艺术家'}
-                        {musicInfo.duration
-                          ? ` · ${musicUtil.duration2TimeStr(musicInfo.duration)}`
-                          : ''}
-                      </Text>
-                    </View>
-                  </View>
+                  <Text style={styles.deleteText}>删除</Text>
                 </TouchableOpacity>
-              );
-            }}
+              </View>
+            )}
+            rightOpenValue={-75}
+            disableRightSwipe
           />
         </>
       )}
@@ -116,10 +98,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  musicItem: {
+  hiddenRow: {
     flexDirection: 'row',
-    height: 80,
-    borderBottomWidth: 1,
-    paddingTop: 20,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  deleteBtn: {
+    backgroundColor: '#e74c3c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+    height: '85%',
+    borderRadius: 8,
+  },
+  deleteText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
