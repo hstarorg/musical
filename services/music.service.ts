@@ -263,6 +263,19 @@ class MusicService {
     ]);
   }
 
+  /**
+   * 删除音乐（同时清理关联的收藏、历史、队列记录）
+   */
+  async deleteMusic(musicId: number) {
+    await this.ensureInit();
+    await this.db.withTransaction(async () => {
+      await this.db.execute('DELETE FROM favorites WHERE music_id = ?;', [musicId]);
+      await this.db.execute('DELETE FROM play_history WHERE music_id = ?;', [musicId]);
+      await this.db.execute('DELETE FROM play_queue WHERE music_id = ?;', [musicId]);
+      await this.db.execute('DELETE FROM music WHERE id = ?;', [musicId]);
+    });
+  }
+
   // ==================== 收藏 ====================
 
   async toggleFavorite(musicId: number): Promise<boolean> {

@@ -19,7 +19,6 @@ class LibraryViewModel extends ViewModelBase<LibraryData> {
   async loadMusicList() {
     const musicList = await musicService.queryMusicList();
     this.data.musicList = musicList;
-    console.log(musicList);
   }
 
   async selectMusicFiles() {
@@ -39,6 +38,12 @@ class LibraryViewModel extends ViewModelBase<LibraryData> {
     await musicService.addMusicListBatch(musicList);
     await this.loadMusicList();
     Alert.alert('添加成功', `已添加 ${musicList.length} 首歌曲`);
+  }
+
+  async deleteMusic(music: MusicInfo) {
+    if (!music.id) return;
+    await musicService.deleteMusic(music.id);
+    await this.loadMusicList();
   }
 
   async scanMusic() {

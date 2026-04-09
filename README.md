@@ -1,50 +1,120 @@
-# Welcome to your Expo app 👋
+# Musical
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A cross-platform music player built with React Native and Expo.
 
-## Get started
+## Features
 
-1. Install dependencies
+### Play
 
-   ```bash
-   npm install
-   ```
+- Local music playback with background audio support
+- Real-time audio waveform visualization (circular spectrum)
+- Play controls: play/pause, next/previous, seek
+- Four play modes: random, single loop, list loop, sequential
+- Favorite toggle on the player screen
 
-2. Start the app
+### Music Library
 
-   ```bash
-   npx expo start
-   ```
+- Add music from device via file picker
+- Scan device for local MP3 files
+- Auto-extract ID3 metadata: title, artist, album, cover art, year, track number, duration
+- Album cover display in music list
 
-In the output, you'll find options to open the app in a
+### Me
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Favorites collection
+- Play history (auto-recorded, last 50 entries)
+- Clear history
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Other
 
-## Get a fresh project
+- Light / dark theme (follows system)
+- Play queue with "next up" support
+- SQLite local persistence
 
-When you're ready, run:
+## Supported Platforms
+
+| Platform | Status |
+|----------|--------|
+| iOS      | 16.0+  |
+| Android  | 7.0+   |
+| Web      | Partial |
+
+## Supported Audio Formats
+
+MP3, M4A, FLAC, OGG, WAV, AAC, WMA
+
+---
+
+## Development Guide
+
+### Prerequisites
+
+- Node.js >= 20
+- pnpm
+- Xcode 26+ (for iOS)
+- Android Studio (for Android)
+
+### Setup
 
 ```bash
-npm run reset-project
+# Install dependencies
+pnpm install
+
+# Install Skia prebuilt binaries (required for waveform visualization)
+node node_modules/@shopify/react-native-skia/scripts/install-libs.js
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Run
 
-## Learn more
+```bash
+pnpm start           # Expo dev server
+pnpm ios             # iOS simulator
+pnpm android         # Android emulator
+pnpm web             # Web browser
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### Build
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+# Regenerate native code (required after changing app.json or native dependencies)
+pnpm prebuild
 
-## Join the community
+# Android APK
+cd android && ./gradlew assembleRelease
+# Output: android/app/build/outputs/apk/release/app-release.apk
+```
 
-Join our community of developers creating universal apps.
+### Test
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+pnpm test
+```
+
+### Tech Stack
+
+| Category | Technology |
+|----------|-----------|
+| Framework | Expo 55 (SDK 55) |
+| Runtime | React 19, React Native 0.83 |
+| Language | TypeScript (strict) |
+| Routing | Expo Router (file-based) |
+| State | Valtio 2.x (proxy-based reactive) |
+| Audio | expo-audio |
+| Database | expo-sqlite |
+| Visualization | @shopify/react-native-skia |
+| Metadata | music-metadata |
+| Package Manager | pnpm |
+
+### Project Structure
+
+```
+app/                  Screens & layouts (file-based routing)
+app-vms/              Valtio ViewModels (player, library, me)
+services/             SQLite database & music business logic
+libs/                 AudioManager, ViewModelBase
+components/           Shared UI components (MusicItem, WaveformVisualizer)
+utils/                Helpers (metadata extraction, filesystem, formatting)
+constants/            Theme colors, enums
+types/                TypeScript type definitions
+hooks/                useColorScheme, useThemeColor
+```

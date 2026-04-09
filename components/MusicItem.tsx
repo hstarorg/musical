@@ -3,27 +3,37 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import type { MusicInfo } from '@/types/music-types';
 import { musicUtil } from '@/utils';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Reanimated, { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 
 type Props = {
   music: MusicInfo;
   onPress?: (music: MusicInfo) => void;
+  onDelete?: (music: MusicInfo) => void;
 };
 
-export function MusicItem({ music, onPress }: Props) {
+function DeleteAction({ drag, onPress }: { drag: SharedValue<number>; onPress: () => void }) {
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: Math.min(1, -drag.value / 60),
+  }));
+
+  return (
+    <Reanimated.View style={[styles.deleteAction, animatedStyle]}>
+      <TouchableOpacity style={styles.deleteBtn} onPress={onPress}>
+        <Text style={styles.deleteText}>删除</Text>
+      </TouchableOpacity>
+    </Reanimated.View>
+  );
+}
+
+export function MusicItem({ music, onPress, onDelete }: Props) {
   const colorScheme = useColorScheme();
   const theme = Colors[colorScheme];
 
-  return (
+  const content = (
     <TouchableOpacity onPress={() => onPress?.(music)} activeOpacity={0.6}>
       <View style={[styles.container, { borderBottomColor: theme.border }]}>
-        <Image
-          source={
-            music.artwork
-              ? { uri: music.artwork }
-              : require('@/assets/images/icon.png')
-          }
-          style={styles.cover}
-        />
+        <Image source={{ uri: music.artwork }} style={styles.cover} />
         <View style={styles.info}>
           <Text style={[styles.name, { color: theme.text }]} numberOfLines={1}>
             {music.name}
@@ -52,6 +62,17 @@ export function MusicItem({ music, onPress }: Props) {
         </View>
       </View>
     </TouchableOpacity>
+  );
+
+  if (!onDelete) return content;
+
+  return (
+    <ReanimatedSwipeable
+      renderRightActions={(_progress, drag) => <DeleteAction drag={drag} onPress={() => onDelete(music)} />}
+      overshootRight={false}
+    >
+      {content}
+    </ReanimatedSwipeable>
   );
 }
 
@@ -94,5 +115,23 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     paddingHorizontal: 4,
     paddingVertical: 1,
+  },
+  deleteAction: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    width: 80,
+  },
+  deleteBtn: {
+    backgroundColor: '#e74c3c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+    height: '80%',
+    borderRadius: 8,
+  },
+  deleteText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

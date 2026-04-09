@@ -4,6 +4,7 @@ import {
   StatusBar,
   FlatList,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import AntIcon from '@expo/vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -63,6 +64,16 @@ export default function MusicScreen() {
               <MusicItem
                 music={item}
                 onPress={(m) => playerVm.selectMusic(m)}
+                onDelete={(m) =>
+                  Alert.alert('确认删除', `删除「${m.name}」？`, [
+                    { text: '取消', style: 'cancel' },
+                    {
+                      text: '删除',
+                      style: 'destructive',
+                      onPress: () => libraryVm.deleteMusic(m),
+                    },
+                  ])
+                }
               />
             )}
           />

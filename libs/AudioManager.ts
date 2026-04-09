@@ -8,6 +8,7 @@ import { EventEmitter } from 'events';
 
 export enum AMEventNames {
   PlaybackStatusUpdate = 'PlaybackStatusUpdate',
+  PlayerChanged = 'PlayerChanged',
 }
 
 export class AudioManager {
@@ -72,6 +73,7 @@ export class AudioManager {
         }
       );
 
+      this.em.emit(AMEventNames.PlayerChanged, player);
       return player;
     } catch (err) {
       if (seq !== this._loadSeq) return null;
@@ -80,7 +82,7 @@ export class AudioManager {
     }
   }
 
-  on(eventName: AMEventNames, handler: (data: AudioStatus) => void) {
+  on(eventName: AMEventNames, handler: (data: any) => void) {
     this.em.on(eventName, handler);
     return () => {
       this.em.off(eventName, handler);

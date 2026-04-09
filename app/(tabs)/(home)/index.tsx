@@ -7,7 +7,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { playerVm } from '@/app-vms/playerVm';
-import { WaveformVisualizer } from '@/components/WaveformVisualizer';
+import { AudioVisualizer } from '@/components/visualizer';
 import { MusicPlaySortEnum } from '@/constants';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -37,7 +37,7 @@ export default function PlayScreen() {
           <Text style={[styles.headerTitle, { color: theme.text }]}>Play</Text>
         </View>
         <View style={styles.graphArea}>
-          <WaveformVisualizer
+          <AudioVisualizer
             isPlaying={playerData.isPlaying}
             tintColor={theme.tint}
           />
