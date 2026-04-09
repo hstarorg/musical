@@ -178,3 +178,6 @@ class PlayerViewModel extends ViewModelBase<PlayerData> {
 }
 
 export const playerVm = new PlayerViewModel();
+
+// 全局初始化播放状态监听（单例，不随组件生命周期销毁）
+playerVm.initPlaybackStatusUpdateNotification();
