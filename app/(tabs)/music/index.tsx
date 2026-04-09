@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import {
   View,
   StatusBar,
-  FlatList,
   StyleSheet,
-  Alert,
+  Text,
+  TouchableOpacity,
 } from 'react-native';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import AntIcon from '@expo/vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,7 +14,7 @@ import { libraryVm } from '@/app-vms/libraryVm';
 import { playerVm } from '@/app-vms/playerVm';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { MusicItem } from '@/components/MusicItem';
+import { MusicItem, MUSIC_ITEM_HEIGHT } from '@/components/MusicItem';
 
 export default function MusicScreen() {
   const libraryData = libraryVm.$useSnapshot();
@@ -25,6 +26,10 @@ export default function MusicScreen() {
   }, []);
 
   const isMusicListEmpty = (libraryData.musicList?.length ?? 0) === 0;
+
+  const handleDelete = (music: typeof libraryData.musicList[number]) => {
+    libraryVm.deleteMusic(music);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>
@@ -56,26 +61,30 @@ export default function MusicScreen() {
               Add Music
             </AntIcon.Button>
           </View>
-          <FlatList
-            data={libraryData.musicList}
+          <SwipeListView
+            data={[...libraryData.musicList]}
             keyExtractor={(item) => String(item.id)}
             style={{ paddingHorizontal: 16 }}
             renderItem={({ item }) => (
-              <MusicItem
-                music={item}
-                onPress={(m) => playerVm.selectMusic(m)}
-                onDelete={(m) =>
-                  Alert.alert('确认删除', `删除「${m.name}」？`, [
-                    { text: '取消', style: 'cancel' },
-                    {
-                      text: '删除',
-                      style: 'destructive',
-                      onPress: () => libraryVm.deleteMusic(m),
-                    },
-                  ])
-                }
-              />
+              <View style={{ backgroundColor: theme.surface }}>
+                <MusicItem
+                  music={item}
+                  onPress={(m) => playerVm.selectMusic(m)}
+                />
+              </View>
             )}
+            renderHiddenItem={({ item }) => (
+              <View style={[styles.hiddenRow, { height: MUSIC_ITEM_HEIGHT }]}>
+                <TouchableOpacity
+                  style={styles.deleteBtn}
+                  onPress={() => handleDelete(item)}
+                >
+                  <Text style={styles.deleteText}>删除</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            rightOpenValue={-75}
+            disableRightSwipe
           />
         </>
       )}
@@ -88,5 +97,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  hiddenRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  deleteBtn: {
+    backgroundColor: '#e74c3c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 70,
+    height: '85%',
+    borderRadius: 8,
+  },
+  deleteText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
