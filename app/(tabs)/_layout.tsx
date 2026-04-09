@@ -2,8 +2,8 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import Feather from '@expo/vector-icons/Feather';
 
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -13,8 +13,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="(home)/index"
         options={{
@@ -28,7 +27,7 @@ export default function TabLayout() {
         name="music/index"
         options={{
           title: 'Music',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color }) => (
             <Feather name="music" size={24} color={color} />
           ),
         }}
@@ -37,7 +36,7 @@ export default function TabLayout() {
         name="me/index"
         options={{
           title: 'Me',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color }) => (
             <Feather name="user" size={24} color={color} />
           ),
         }}

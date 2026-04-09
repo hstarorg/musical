@@ -31,7 +31,7 @@ export class AudioManager {
         'AudioManager is a singleton class, cannot create multiple instances'
       );
     }
-    setAudioModeAsync({ shouldPlayInBackground: true });
+    setAudioModeAsync({ shouldPlayInBackground: true, playsInSilentMode: true });
   }
 
   /**
