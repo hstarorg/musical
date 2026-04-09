@@ -3,6 +3,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import type { MusicInfo } from '@/types/music-types';
 import { musicUtil } from '@/utils';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { DefaultCover } from './DefaultCover';
 
 type Props = {
   music: MusicInfo;
@@ -16,7 +17,11 @@ export function MusicItem({ music, onPress }: Props) {
   return (
     <TouchableOpacity onPress={() => onPress?.(music)} activeOpacity={0.6}>
       <View style={[styles.container, { borderBottomColor: theme.border }]}>
-        <Image source={{ uri: music.artwork }} style={styles.cover} />
+        {music.artwork ? (
+          <Image source={{ uri: music.artwork }} style={styles.cover} />
+        ) : (
+          <DefaultCover size={48} borderRadius={6} />
+        )}
         <View style={styles.info}>
           <Text style={[styles.name, { color: theme.text }]} numberOfLines={1}>
             {music.name}
