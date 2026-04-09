@@ -1,29 +1,35 @@
-import { Audio, AVPlaybackStatus } from 'expo-av';
+// Mock expo-audio before importing AudioManager
+const mockPlay = jest.fn();
+const mockPause = jest.fn();
+const mockSeekTo = jest.fn().mockResolvedValue(undefined);
+const mockRelease = jest.fn();
+const mockAddListener = jest.fn().mockReturnValue({ remove: jest.fn() });
 
-// Mock expo-av before importing AudioManager
-const mockLoadAsync = jest.fn().mockResolvedValue({});
-const mockPlayAsync = jest.fn().mockResolvedValue({});
-const mockPauseAsync = jest.fn().mockResolvedValue({});
-const mockStopAsync = jest.fn().mockResolvedValue({});
-const mockUnloadAsync = jest.fn().mockResolvedValue({});
-const mockGetStatusAsync = jest.fn().mockResolvedValue({ isLoaded: true, isPlaying: false });
-const mockSetPositionAsync = jest.fn().mockResolvedValue({});
-const mockSetOnPlaybackStatusUpdate = jest.fn();
+const mockPlayer = {
+  id: 'test-player',
+  playing: false,
+  currentTime: 0,
+  duration: 100,
+  play: mockPlay,
+  pause: mockPause,
+  seekTo: mockSeekTo,
+  release: mockRelease,
+  addListener: mockAddListener,
+};
 
-jest.mock('expo-av', () => ({
-  Audio: {
-    Sound: jest.fn().mockImplementation(() => ({
-      loadAsync: mockLoadAsync,
-      playAsync: mockPlayAsync,
-      pauseAsync: mockPauseAsync,
-      stopAsync: mockStopAsync,
-      unloadAsync: mockUnloadAsync,
-      getStatusAsync: mockGetStatusAsync,
-      setPositionAsync: mockSetPositionAsync,
-      setOnPlaybackStatusUpdate: mockSetOnPlaybackStatusUpdate,
-    })),
-    setAudioModeAsync: jest.fn(),
-  },
+jest.mock('expo-audio', () => ({
+  createAudioPlayer: jest.fn(() => ({
+    id: 'test-player',
+    playing: false,
+    currentTime: 0,
+    duration: 100,
+    play: mockPlay,
+    pause: mockPause,
+    seekTo: mockSeekTo,
+    release: mockRelease,
+    addListener: mockAddListener,
+  })),
+  setAudioModeAsync: jest.fn(),
 }));
 
 // Must import after mocks
@@ -49,61 +55,30 @@ describe('AudioManager', () => {
   });
 
   describe('loadAsync', () => {
-    it('should create a new Sound and load it', async () => {
+    it('should create a player and return it', async () => {
+      const { createAudioPlayer } = require('expo-audio');
       const result = await manager.loadAsync('file:///test.mp3');
-      expect(Audio.Sound).toHaveBeenCalled();
-      expect(mockLoadAsync).toHaveBeenCalledWith({ uri: 'file:///test.mp3' });
+      expect(createAudioPlayer).toHaveBeenCalledWith({ uri: 'file:///test.mp3' });
       expect(result).toBeTruthy();
     });
 
-    it('should stop and unload previous sound before loading new one', async () => {
+    it('should release previous player before loading new one', async () => {
       await manager.loadAsync('file:///first.mp3');
-      mockGetStatusAsync.mockResolvedValueOnce({ isLoaded: true });
       await manager.loadAsync('file:///second.mp3');
-      expect(mockStopAsync).toHaveBeenCalled();
-    });
-
-    it('should return null when superseded by a newer load', async () => {
-      // Simulate a slow load that gets overtaken
-      let resolveFirst: () => void;
-      const slowLoad = new Promise<void>((resolve) => {
-        resolveFirst = resolve;
-      });
-      mockStopAsync.mockImplementationOnce(() => slowLoad);
-
-      // First load will be slow due to stop
-      const firstLoad = manager.loadAsync('file:///slow.mp3');
-
-      // Trigger a second load immediately (this increments _loadSeq)
-      // We need the first load to still be waiting on stopAsync
-      // Reset stop to resolve immediately for second load
-      mockStopAsync.mockResolvedValue({});
-      const secondLoad = manager.loadAsync('file:///fast.mp3');
-
-      // Now let the first stop complete
-      resolveFirst!();
-
-      const [firstResult, secondResult] = await Promise.all([
-        firstLoad,
-        secondLoad,
-      ]);
-
-      expect(firstResult).toBeNull();
-      expect(secondResult).toBeTruthy();
+      expect(mockRelease).toHaveBeenCalled();
     });
   });
 
   describe('playAsync', () => {
-    it('should play when loaded', async () => {
+    it('should call play on the player', async () => {
       await manager.loadAsync('file:///test.mp3');
-      mockGetStatusAsync.mockResolvedValueOnce({ isLoaded: true });
       await manager.playAsync();
-      expect(mockPlayAsync).toHaveBeenCalled();
+      expect(mockPlay).toHaveBeenCalled();
     });
 
     it('should not throw on error', async () => {
       await manager.loadAsync('file:///test.mp3');
-      mockGetStatusAsync.mockRejectedValueOnce(new Error('fail'));
+      mockPlay.mockImplementationOnce(() => { throw new Error('fail'); });
       await expect(manager.playAsync()).resolves.not.toThrow();
     });
   });
@@ -111,21 +86,21 @@ describe('AudioManager', () => {
   describe('pauseAsync', () => {
     it('should not throw on error', async () => {
       await manager.loadAsync('file:///test.mp3');
-      mockPauseAsync.mockRejectedValueOnce(new Error('fail'));
+      mockPause.mockImplementationOnce(() => { throw new Error('fail'); });
       await expect(manager.pauseAsync()).resolves.not.toThrow();
     });
   });
 
   describe('setPositionAsync', () => {
-    it('should convert seconds to milliseconds', async () => {
+    it('should call seekTo with seconds', async () => {
       await manager.loadAsync('file:///test.mp3');
       await manager.setPositionAsync(30);
-      expect(mockSetPositionAsync).toHaveBeenCalledWith(30000);
+      expect(mockSeekTo).toHaveBeenCalledWith(30);
     });
   });
 
   describe('event system', () => {
-    it('should register and unregister event handlers', async () => {
+    it('should register and unregister event handlers', () => {
       const handler = jest.fn();
       const unsubscribe = manager.on(AMEventNames.PlaybackStatusUpdate, handler);
       expect(typeof unsubscribe).toBe('function');

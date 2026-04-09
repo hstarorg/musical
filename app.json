@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "vip.hstarorg.musical"
+      "bundleIdentifier": "org.hstar.musical"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "vip.hstarorg.musical"
+      "package": "org.hstar.musical"
     },
     "web": {
       "bundler": "metro",
@@ -31,7 +31,16 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "16.0"
+          }
+        }
+      ],
+      "./plugins/withXcode26Fix"
     ],
     "experiments": {
       "typedRoutes": true

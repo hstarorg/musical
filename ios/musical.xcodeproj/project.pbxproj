@@ -8,25 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		3D98BC630070AEBB6A78BE84 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 294B1697D9E41F3CA858C1A1 /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		AB93FB58874C7EE4B3C913CA /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458EA22AD2F63EE7B2BE9322 /* ExpoModulesProvider.swift */; };
-		B9B0F85ED8AEAEDE2EDBDE98 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E1428B74B4ADD9F1134261A1 /* PrivacyInfo.xcprivacy */; };
+		484791B436A91F9F1D50049B /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D216BCF89EC838864B984D24 /* ExpoModulesProvider.swift */; };
+		8BC1935BC925C43AB2A90C99 /* libPods-musical.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E64056E4B62ABFC756BEF29 /* libPods-musical.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		FA70D9C99780C783EB45F1F3 /* libPods-musical.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F7E91D65505041FD25E68E /* libPods-musical.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* musical.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = musical.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = musical/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = musical/Info.plist; sourceTree = "<group>"; };
-		458EA22AD2F63EE7B2BE9322 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-musical/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		563B15542B5F1691A7982385 /* Pods-musical.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-musical.debug.xcconfig"; path = "Target Support Files/Pods-musical/Pods-musical.debug.xcconfig"; sourceTree = "<group>"; };
+		294B1697D9E41F3CA858C1A1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = musical/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		9E64056E4B62ABFC756BEF29 /* libPods-musical.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-musical.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A11EC4DD7E5387AB26965DF8 /* Pods-musical.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-musical.release.xcconfig"; path = "Target Support Files/Pods-musical/Pods-musical.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = musical/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		BE9C033182218FCCDE186CE7 /* Pods-musical.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-musical.release.xcconfig"; path = "Target Support Files/Pods-musical/Pods-musical.release.xcconfig"; sourceTree = "<group>"; };
-		C2F7E91D65505041FD25E68E /* libPods-musical.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-musical.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E1428B74B4ADD9F1134261A1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = musical/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		C200FD21F7E388BB9295BB3C /* Pods-musical.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-musical.debug.xcconfig"; path = "Target Support Files/Pods-musical/Pods-musical.debug.xcconfig"; sourceTree = "<group>"; };
+		D216BCF89EC838864B984D24 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-musical/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = musical/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* musical-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "musical-Bridging-Header.h"; path = "musical/musical-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA70D9C99780C783EB45F1F3 /* libPods-musical.a in Frameworks */,
+				8BC1935BC925C43AB2A90C99 /* libPods-musical.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,36 +53,18 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				E1428B74B4ADD9F1134261A1 /* PrivacyInfo.xcprivacy */,
+				294B1697D9E41F3CA858C1A1 /* PrivacyInfo.xcprivacy */,
 			);
 			name = musical;
-			sourceTree = "<group>";
-		};
-		1411E24383D0392CC8786422 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				563B15542B5F1691A7982385 /* Pods-musical.debug.xcconfig */,
-				BE9C033182218FCCDE186CE7 /* Pods-musical.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				C2F7E91D65505041FD25E68E /* libPods-musical.a */,
+				9E64056E4B62ABFC756BEF29 /* libPods-musical.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		5C7F85A94DD6717D9340BEC9 /* musical */ = {
-			isa = PBXGroup;
-			children = (
-				458EA22AD2F63EE7B2BE9322 /* ExpoModulesProvider.swift */,
-			);
-			name = musical;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -99,8 +81,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				1411E24383D0392CC8786422 /* Pods */,
-				A63DAAFA8DFDB1C5D77C4642 /* ExpoModulesProviders */,
+				FDA5EA09C997C2A53B1BBDFF /* Pods */,
+				A4B453952D4F499629CCB5BC /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -115,10 +97,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A63DAAFA8DFDB1C5D77C4642 /* ExpoModulesProviders */ = {
+		8A97E8C5B33562987C57F732 /* musical */ = {
 			isa = PBXGroup;
 			children = (
-				5C7F85A94DD6717D9340BEC9 /* musical */,
+				D216BCF89EC838864B984D24 /* ExpoModulesProvider.swift */,
+			);
+			name = musical;
+			sourceTree = "<group>";
+		};
+		A4B453952D4F499629CCB5BC /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				8A97E8C5B33562987C57F732 /* musical */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
@@ -132,6 +122,16 @@
 			path = musical/Supporting;
 			sourceTree = "<group>";
 		};
+		FDA5EA09C997C2A53B1BBDFF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C200FD21F7E388BB9295BB3C /* Pods-musical.debug.xcconfig */,
+				A11EC4DD7E5387AB26965DF8 /* Pods-musical.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "musical" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				81A10EFDDD23512A319F5706 /* [Expo] Configure project */,
+				8D3188F80D0A811BE900D6FD /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				444600051CE2A7C01678BAC7 /* [CP] Embed Pods Frameworks */,
+				C5FE964444A3387F295DF905 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				B9B0F85ED8AEAEDE2EDBDE98 /* PrivacyInfo.xcprivacy in Resources */,
+				3D98BC630070AEBB6A78BE84 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,28 +242,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		444600051CE2A7C01678BAC7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-musical/Pods-musical-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermesvm.framework/hermesvm",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermesvm.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-musical/Pods-musical-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -300,7 +278,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-musical/Pods-musical-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		81A10EFDDD23512A319F5706 /* [Expo] Configure project */ = {
+		8D3188F80D0A811BE900D6FD /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -324,6 +302,28 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-musical/expo-configure-project.sh\"\n";
 		};
+		C5FE964444A3387F295DF905 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-musical/Pods-musical-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermesvm.framework/hermesvm",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermesvm.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-musical/Pods-musical-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -332,7 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				AB93FB58874C7EE4B3C913CA /* ExpoModulesProvider.swift in Sources */,
+				484791B436A91F9F1D50049B /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,7 +341,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 563B15542B5F1691A7982385 /* Pods-musical.debug.xcconfig */;
+			baseConfigurationReference = C200FD21F7E388BB9295BB3C /* Pods-musical.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -363,8 +363,6 @@
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
-					"-weak_framework",
-					SwiftUICore,
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = org.hstar.musical;
@@ -379,7 +377,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BE9C033182218FCCDE186CE7 /* Pods-musical.release.xcconfig */;
+			baseConfigurationReference = A11EC4DD7E5387AB26965DF8 /* Pods-musical.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -396,8 +394,6 @@
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
-					"-weak_framework",
-					SwiftUICore,
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = org.hstar.musical;

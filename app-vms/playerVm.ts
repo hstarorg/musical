@@ -5,7 +5,7 @@ import { MusicPlaySortEnum } from '@/constants';
 import { ViewModelBase } from '@/libs/bizify';
 import { Alert } from 'react-native';
 import { musicUtil } from '@/utils';
-import { AVPlaybackStatusError, AVPlaybackStatusSuccess } from 'expo-av';
+import type { AudioStatus } from 'expo-audio';
 
 type PlayerData = {
   currentMusic?: MusicInfo;
@@ -37,27 +37,23 @@ class PlayerViewModel extends ViewModelBase<PlayerData> {
   initPlaybackStatusUpdateNotification() {
     return AudioManager.instance.on(
       AMEventNames.PlaybackStatusUpdate,
-      (audioStatus: AVPlaybackStatusSuccess | AVPlaybackStatusError) => {
-        if ((audioStatus as AVPlaybackStatusError).error) {
-          return;
-        }
-        const status = audioStatus as AVPlaybackStatusSuccess;
-        this.data.isPlaying = status.isPlaying;
+      (status: AudioStatus) => {
+        this.data.isPlaying = status.playing;
 
         if (status.isLoaded) {
           this.data.progressInfo = {
-            progress: Math.floor(status.positionMillis / 1000),
-            total: Math.floor((status.durationMillis || 0) / 1000),
+            progress: Math.floor(status.currentTime),
+            total: Math.floor(status.duration || 0),
             positionMillis: musicUtil.duration2TimeStr(
-              status.positionMillis || 0
+              (status.currentTime || 0) * 1000
             ),
             durationMillis: musicUtil.duration2TimeStr(
-              status.durationMillis || 0
+              (status.duration || 0) * 1000
             ),
           };
 
           // 播放结束时自动切换下一首
-          if (status.didJustFinish && !status.isLooping) {
+          if (status.didJustFinish && !status.loop) {
             this._onTrackFinished();
           }
         }
@@ -91,7 +87,7 @@ class PlayerViewModel extends ViewModelBase<PlayerData> {
 
   async togglePlay() {
     const audioStatus = await AudioManager.instance.getAudioStatus();
-    if (audioStatus?.isPlaying) {
+    if (audioStatus?.playing) {
       await AudioManager.instance.pauseAsync();
     } else {
       if (audioStatus?.isLoaded) {

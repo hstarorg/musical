@@ -1,4 +1,9 @@
-import { Audio, AVPlaybackStatus } from 'expo-av';
+import {
+  createAudioPlayer,
+  setAudioModeAsync,
+  AudioStatus,
+} from 'expo-audio';
+import type { AudioPlayer } from 'expo-audio';
 import { EventEmitter } from 'events';
 
 export enum AMEventNames {
@@ -6,9 +11,10 @@ export enum AMEventNames {
 }
 
 export class AudioManager {
-  private playbackObject: Audio.Sound | null = null;
+  private player: AudioPlayer | null = null;
   private readonly em = new EventEmitter();
   private _loadSeq = 0;
+  private _statusSubscription: { remove: () => void } | null = null;
 
   private static signletonInstance: AudioManager | null = null;
 
@@ -25,53 +31,51 @@ export class AudioManager {
         'AudioManager is a singleton class, cannot create multiple instances'
       );
     }
-    Audio.setAudioModeAsync({ staysActiveInBackground: true });
+    setAudioModeAsync({ shouldPlayInBackground: true });
   }
 
   /**
    * 加载音频文件，带并发控制：快速连续调用时只有最后一次生效
    * 返回 null 表示本次加载已被更新的加载取代
    */
-  async loadAsync(soundPath: string): Promise<Audio.Sound | null> {
+  async loadAsync(soundPath: string): Promise<AudioPlayer | null> {
     const seq = ++this._loadSeq;
 
-    // 先停止并卸载上一个
-    if (this.playbackObject) {
-      await this.stopAsync();
-      await this.tryUnloadAsync();
-    }
+    // 释放上一个 player
+    this._cleanup();
 
-    // 在 stop/unload 期间如果又触发了新的 load，放弃当前操作
+    // 在清理期间如果又触发了新的 load，放弃当前操作
     if (seq !== this._loadSeq) return null;
 
-    const sound = new Audio.Sound();
-    sound.setOnPlaybackStatusUpdate((status: AVPlaybackStatus) => {
-      this.em.emit(AMEventNames.PlaybackStatusUpdate, status);
-    });
-
-    const source =
-      typeof soundPath === 'number' ? soundPath : { uri: soundPath };
-
     try {
-      await sound.loadAsync(source);
+      const source = typeof soundPath === 'number' ? soundPath : { uri: soundPath };
+      const player = createAudioPlayer(source);
+
+      // 在创建后检查是否被取代
+      if (seq !== this._loadSeq) {
+        player.release();
+        return null;
+      }
+
+      this.player = player;
+
+      // 监听播放状态
+      this._statusSubscription = player.addListener(
+        'playbackStatusUpdate',
+        (status: AudioStatus) => {
+          this.em.emit(AMEventNames.PlaybackStatusUpdate, status);
+        }
+      );
+
+      return player;
     } catch (err) {
-      // 加载失败时，如果已被新请求取代则静默丢弃
       if (seq !== this._loadSeq) return null;
       console.error('[AudioManager] loadAsync failed:', err);
       throw err;
     }
-
-    // 加载完成后再次检查：如果已被新请求取代，卸载刚加载好的资源
-    if (seq !== this._loadSeq) {
-      await sound.unloadAsync().catch(() => {});
-      return null;
-    }
-
-    this.playbackObject = sound;
-    return sound;
   }
 
-  on(eventName: AMEventNames, handler: (data: AVPlaybackStatus) => void) {
+  on(eventName: AMEventNames, handler: (data: AudioStatus) => void) {
     this.em.on(eventName, handler);
     return () => {
       this.em.off(eventName, handler);
@@ -80,10 +84,7 @@ export class AudioManager {
 
   async playAsync() {
     try {
-      const audioStatus = await this.playbackObject?.getStatusAsync();
-      if (audioStatus?.isLoaded) {
-        await this.playbackObject?.playAsync();
-      }
+      this.player?.play();
     } catch (err) {
       console.error('[AudioManager] playAsync failed:', err);
     }
@@ -91,7 +92,7 @@ export class AudioManager {
 
   async pauseAsync() {
     try {
-      await this.playbackObject?.pauseAsync();
+      this.player?.pause();
     } catch (err) {
       console.error('[AudioManager] pauseAsync failed:', err);
     }
@@ -99,18 +100,30 @@ export class AudioManager {
 
   async stopAsync() {
     try {
-      await this.playbackObject?.stopAsync();
+      this.player?.pause();
+      await this.player?.seekTo(0);
     } catch (err) {
       console.error('[AudioManager] stopAsync failed:', err);
     }
   }
 
-  async getAudioStatus() {
-    const status = await this.playbackObject?.getStatusAsync();
-    if (status?.isLoaded) {
-      return status;
-    }
-    return void 0;
+  async getAudioStatus(): Promise<AudioStatus | undefined> {
+    if (!this.player) return undefined;
+    return {
+      id: this.player.id,
+      currentTime: this.player.currentTime,
+      duration: this.player.duration,
+      playing: this.player.playing,
+      isLoaded: this.player.duration > 0,
+      didJustFinish: false,
+      isBuffering: false,
+      loop: false,
+      mute: false,
+      playbackState: '',
+      timeControlStatus: '',
+      reasonForWaitingToPlay: '',
+      playbackRate: 1,
+    } as AudioStatus;
   }
 
   /**
@@ -119,21 +132,24 @@ export class AudioManager {
    */
   async setPositionAsync(value: number) {
     try {
-      await this.playbackObject?.setPositionAsync(value * 1000);
+      await this.player?.seekTo(value);
     } catch (err) {
       console.error('[AudioManager] setPositionAsync failed:', err);
     }
   }
 
-  private async tryUnloadAsync() {
-    try {
-      const status = await this.playbackObject?.getStatusAsync();
-      if (status?.isLoaded) {
-        await this.playbackObject?.unloadAsync();
-      }
-    } catch (err) {
-      console.warn('[AudioManager] tryUnloadAsync failed:', err);
+  private _cleanup() {
+    if (this._statusSubscription) {
+      this._statusSubscription.remove();
+      this._statusSubscription = null;
     }
-    this.playbackObject = null;
+    if (this.player) {
+      try {
+        this.player.release();
+      } catch (err) {
+        console.warn('[AudioManager] cleanup failed:', err);
+      }
+      this.player = null;
+    }
   }
 }
