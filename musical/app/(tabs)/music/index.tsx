@@ -26,7 +26,7 @@ export default function MusicScreen() {
     libraryVm.loadMusicList();
   }, []);
 
-  const isMusicListEmpty = libraryData.musicList.length === 0;
+  const isMusicListEmpty = (libraryData.musicList?.length ?? 0) === 0;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>
