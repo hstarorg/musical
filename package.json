@@ -10,7 +10,9 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-    "prebuild": "expo prebuild --clean"
+    "prebuild": "expo prebuild --clean && node -e \"const f='package.json',d=require('./'+f);d.scripts.android='expo start --android';d.scripts.ios='expo start --ios';require('fs').writeFileSync(f,JSON.stringify(d,null,2)+'\\n')\"",
+    "prebuild:android": "expo prebuild --clean --platform android && node -e \"const f='package.json',d=require('./'+f);d.scripts.android='expo start --android';d.scripts.ios='expo start --ios';require('fs').writeFileSync(f,JSON.stringify(d,null,2)+'\\n')\"",
+    "prebuild:ios": "expo prebuild --clean --platform ios && node -e \"const f='package.json',d=require('./'+f);d.scripts.android='expo start --android';d.scripts.ios='expo start --ios';require('fs').writeFileSync(f,JSON.stringify(d,null,2)+'\\n')\""
   },
   "jest": {
     "preset": "jest-expo"
