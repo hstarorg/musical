@@ -9,8 +9,8 @@ import { WebView } from 'react-native-webview';
 
 import { playerVm } from '@/app-vms/playerVm';
 import { MusicPlaySortEnum } from '@/constants';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 const PlaySortIcons: Record<MusicPlaySortEnum, string> = {
   [MusicPlaySortEnum.Random]: 'shuffle-variant',

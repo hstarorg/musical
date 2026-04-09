@@ -9,17 +9,24 @@ const ConfigKeys = {
 
 class MusicService {
   private db: DbService;
+  private _initPromise: Promise<void>;
   constructor() {
     this.db = new DbService('musical.db');
-    this.tryInit().then((result) => {
-      console.log('init done', result);
+    this._initPromise = this.tryInit().then(() => {
+      console.log('init done');
     });
+  }
+
+  /** 确保数据库初始化完成后再执行操作 */
+  private async ensureInit() {
+    await this._initPromise;
   }
 
   /**
    * 查询音乐列表
    */
-  queryMusicList(): Promise<MusicInfo[]> {
+  async queryMusicList(): Promise<MusicInfo[]> {
+    await this.ensureInit();
     return this.db.find('SELECT * FROM music;');
   }
 
@@ -93,6 +100,7 @@ class MusicService {
     type: 'next' | 'prev',
     sortType: string
   ) {
+    await this.ensureInit();
     // 单曲循环：保持当前歌曲不变
     if (sortType === 'singleLoop') {
       return;
@@ -143,6 +151,7 @@ class MusicService {
    * @returns
    */
   async getCurrentMusic() {
+    await this.ensureInit();
     const sql = `
     SELECT t2.* FROM sys_config AS t1
     JOIN music AS t2 ON t1.value = t2.id
@@ -158,6 +167,7 @@ class MusicService {
    * @returns
    */
   async setCurrentMusic(musicId: string) {
+    await this.ensureInit();
     // 此 sql 为更新主键，不太使用，注意：第一个字段需要是unique
     const sql = `
     INSERT OR REPLACE INTO [sys_config]([key], value)
@@ -187,6 +197,7 @@ class MusicService {
    * 扫描和存储音乐文件到 Sqlite（增量更新，不会清空已有数据）
    */
   async scanAndStoreLocalMusics() {
+    await this.ensureInit();
     if (Platform.OS === 'android') {
       const granted = await requestPermissionAndroid(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
@@ -221,6 +232,7 @@ class MusicService {
    */
   async addMusicListBatch(musicList: MusicInfo[]) {
     if (musicList.length === 0) return;
+    await this.ensureInit();
     await this.db.withTransaction(async () => {
       for (const music of musicList) {
         await this.insertMusic(music);
@@ -247,6 +259,7 @@ class MusicService {
   // ==================== 收藏 ====================
 
   async toggleFavorite(musicId: number): Promise<boolean> {
+    await this.ensureInit();
     const existing = await this.db.findOne<{ id: number }>(
       'SELECT id FROM favorites WHERE music_id = ?;',
       [musicId]
@@ -264,6 +277,7 @@ class MusicService {
   }
 
   async isFavorite(musicId: number): Promise<boolean> {
+    await this.ensureInit();
     const row = await this.db.findOne<{ id: number }>(
       'SELECT id FROM favorites WHERE music_id = ?;',
       [musicId]
@@ -272,6 +286,7 @@ class MusicService {
   }
 
   async queryFavorites(): Promise<MusicInfo[]> {
+    await this.ensureInit();
     return this.db.find(
       `SELECT m.* FROM favorites f JOIN music m ON f.music_id = m.id ORDER BY f.created_at DESC;`
     );
@@ -280,6 +295,7 @@ class MusicService {
   // ==================== 播放历史 ====================
 
   async addPlayHistory(musicId: number) {
+    await this.ensureInit();
     await this.db.execute(
       'INSERT INTO play_history(music_id) VALUES(?);',
       [musicId]
@@ -293,6 +309,7 @@ class MusicService {
   }
 
   async queryPlayHistory(): Promise<(MusicInfo & { played_at: number })[]> {
+    await this.ensureInit();
     return this.db.find(
       `SELECT m.*, h.played_at FROM play_history h
        JOIN music m ON h.music_id = m.id
@@ -301,18 +318,21 @@ class MusicService {
   }
 
   async clearPlayHistory() {
+    await this.ensureInit();
     await this.db.execute('DELETE FROM play_history;');
   }
 
   // ==================== 播放队列 ====================
 
   async getQueue(): Promise<MusicInfo[]> {
+    await this.ensureInit();
     return this.db.find(
       `SELECT m.* FROM play_queue q JOIN music m ON q.music_id = m.id ORDER BY q.position ASC;`
     );
   }
 
   async addToQueue(musicId: number) {
+    await this.ensureInit();
     const maxPos = await this.db.findOne<{ maxPos: number | null }>(
       'SELECT MAX(position) as maxPos FROM play_queue;'
     );
@@ -324,6 +344,7 @@ class MusicService {
   }
 
   async removeFromQueue(musicId: number) {
+    await this.ensureInit();
     await this.db.execute(
       'DELETE FROM play_queue WHERE music_id = ?;',
       [musicId]
@@ -331,10 +352,12 @@ class MusicService {
   }
 
   async clearQueue() {
+    await this.ensureInit();
     await this.db.execute('DELETE FROM play_queue;');
   }
 
   async getNextFromQueue(): Promise<MusicInfo | null> {
+    await this.ensureInit();
     const item = await this.db.findOne<MusicInfo & { qid: number }>(
       `SELECT m.*, q.id as qid FROM play_queue q
        JOIN music m ON q.music_id = m.id

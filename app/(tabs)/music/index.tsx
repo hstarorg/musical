@@ -13,8 +13,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { libraryVm } from '@/app-vms/libraryVm';
 import { playerVm } from '@/app-vms/playerVm';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { musicUtil } from '@/utils';
 
 export default function MusicScreen() {
@@ -26,7 +26,7 @@ export default function MusicScreen() {
     libraryVm.loadMusicList();
   }, []);
 
-  const isMusicListEmpty = libraryData.musicList.length === 0;
+  const isMusicListEmpty = (libraryData.musicList?.length ?? 0) === 0;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>

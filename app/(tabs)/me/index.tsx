@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { meVm } from '@/app-vms/meVm';
 import { playerVm } from '@/app-vms/playerVm';
 import { MusicInfo } from '@/types/music-types';
@@ -120,7 +120,7 @@ export default function MeScreen() {
 
       {/* 列表内容 */}
       {meData.activeTab === 'favorites' ? (
-        meData.favorites.length === 0 ? (
+        (meData.favorites?.length ?? 0) === 0 ? (
           <View style={styles.emptyState}>
             <Text style={{ color: theme.textSecondary }}>暂无收藏</Text>
           </View>
@@ -132,7 +132,7 @@ export default function MeScreen() {
             renderItem={({ item }) => renderMusicItem(item)}
           />
         )
-      ) : meData.history.length === 0 ? (
+      ) : (meData.history?.length ?? 0) === 0 ? (
         <View style={styles.emptyState}>
           <Text style={{ color: theme.textSecondary }}>暂无播放记录</Text>
         </View>
