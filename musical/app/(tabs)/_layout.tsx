@@ -1,8 +1,7 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import Feather from '@expo/vector-icons/Feather';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -14,20 +13,32 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
       }}>
       <Tabs.Screen
-        name="index"
+        name="(home)/index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Play',
+          tabBarIcon: ({ color }) => (
+            <Feather name="play-circle" size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="music/index"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Music',
+          tabBarIcon: ({ color }) => (
+            <Feather name="music" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="me/index"
+        options={{
+          title: 'Me',
+          tabBarIcon: ({ color }) => (
+            <Feather name="user" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>
