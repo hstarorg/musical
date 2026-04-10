@@ -2,6 +2,11 @@ name: Build Android APK
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号（如 v1.0.0）'
+        required: true
+        default: 'v1.0.0'
   push:
     tags: ['v*']
 
@@ -41,8 +46,14 @@ jobs:
         working-directory: android
         run: ./gradlew assembleRelease
 
+      - name: Get version tag
+        id: version
+        run: echo "tag=${{ github.event.inputs.version || github.ref_name }}" >> $GITHUB_OUTPUT
+
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Musical ${{ steps.version.outputs.tag }}
           files: android/app/build/outputs/apk/release/app-release.apk
           generate_release_notes: true
