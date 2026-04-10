@@ -35,9 +35,15 @@ class LibraryViewModel extends ViewModelBase<LibraryData> {
       result.assets.map((asset) => extractMusicInfo(asset.name, asset.uri)),
     );
 
+    const beforeCount = (await musicService.queryMusicList()).length;
     await musicService.addMusicListBatch(musicList);
     await this.loadMusicList();
-    Alert.alert('添加成功', `已添加 ${musicList.length} 首歌曲`);
+    const added = this.data.musicList.length - beforeCount;
+    const skipped = musicList.length - added;
+    const msg = skipped > 0
+      ? `添加 ${added} 首，跳过 ${skipped} 首重复歌曲`
+      : `已添加 ${added} 首歌曲`;
+    Alert.alert('添加完成', msg);
   }
 
   async deleteMusic(music: MusicInfo) {
@@ -46,9 +52,10 @@ class LibraryViewModel extends ViewModelBase<LibraryData> {
     await this.loadMusicList();
   }
 
-  async scanMusic() {
-    await musicService.scanAndStoreLocalMusics();
+  async scanMusic(): Promise<number> {
+    const count = await musicService.scanAndStoreLocalMusics();
     await this.loadMusicList();
+    return count;
   }
 }
 

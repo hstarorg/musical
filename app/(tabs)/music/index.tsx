@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import AntIcon from '@expo/vector-icons/AntDesign';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Feather from '@expo/vector-icons/Feather';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { libraryVm } from '@/app-vms/libraryVm';
@@ -20,84 +22,204 @@ export default function MusicScreen() {
   const libraryData = libraryVm.$useSnapshot();
   const colorScheme = useColorScheme();
   const theme = Colors[colorScheme];
+  const [scanning, setScanning] = useState(false);
 
   useEffect(() => {
     libraryVm.loadMusicList();
   }, []);
 
-  const isMusicListEmpty = (libraryData.musicList?.length ?? 0) === 0;
-
-  const handleDelete = (music: typeof libraryData.musicList[number]) => {
-    libraryVm.deleteMusic(music);
+  const handleScan = async () => {
+    setScanning(true);
+    const count = await libraryVm.scanMusic();
+    setScanning(false);
+    if (count === 0) {
+      Alert.alert('扫描完成', '未发现新的音乐文件，试试手动选择文件添加');
+    } else {
+      Alert.alert('扫描完成', `新增 ${count} 首歌曲`);
+    }
   };
 
+  const isMusicListEmpty = (libraryData.musicList?.length ?? 0) === 0;
+
+  // ==================== 空状态 ====================
+  if (isMusicListEmpty) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>
+        <StatusBar
+          barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+        />
+        <View style={styles.emptyContainer}>
+          {/* 大图标 */}
+          <MaterialCommunityIcons
+            name="music-note"
+            size={64}
+            color={theme.tint}
+            style={{ marginBottom: 16 }}
+          />
+          <Text style={[styles.emptyTitle, { color: theme.text }]}>
+            还没有音乐
+          </Text>
+          <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>
+            添加几首开始播放吧
+          </Text>
+
+          {/* 卡片 */}
+          <View style={styles.cardGroup}>
+            <TouchableOpacity
+              style={[styles.card, { backgroundColor: theme.background }]}
+              activeOpacity={0.7}
+              onPress={libraryVm.selectMusicFiles}
+            >
+              <View style={[styles.cardIcon, { backgroundColor: theme.tint + '18' }]}>
+                <Feather name="folder" size={20} color={theme.tint} />
+              </View>
+              <View style={styles.cardContent}>
+                <Text style={[styles.cardTitle, { color: theme.text }]}>
+                  选择文件
+                </Text>
+                <Text style={[styles.cardDesc, { color: theme.textSecondary }]}>
+                  从设备中选择音乐文件
+                </Text>
+              </View>
+              <Feather name="chevron-right" size={18} color={theme.textSecondary} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.card, { backgroundColor: theme.background }]}
+              activeOpacity={0.7}
+              onPress={handleScan}
+              disabled={scanning}
+            >
+              <View style={[styles.cardIcon, { backgroundColor: theme.tint + '18' }]}>
+                <Feather name="search" size={20} color={theme.tint} />
+              </View>
+              <View style={styles.cardContent}>
+                <Text style={[styles.cardTitle, { color: theme.text }]}>
+                  {scanning ? '扫描中...' : '扫描设备'}
+                </Text>
+                <Text style={[styles.cardDesc, { color: theme.textSecondary }]}>
+                  自动发现设备中的音乐
+                </Text>
+              </View>
+              <Feather name="chevron-right" size={18} color={theme.textSecondary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // ==================== 有内容 ====================
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>
       <StatusBar
         barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
       />
-      {isMusicListEmpty ? (
-        <View style={styles.emptyArea}>
-          <AntIcon.Button
-            name="plus"
-            style={{ width: 220 }}
-            onPress={libraryVm.selectMusicFiles}
-          >
-            Add Music
-          </AntIcon.Button>
-          <View style={{ height: 24 }} />
-          <AntIcon.Button
-            name="plus"
-            style={{ width: 220 }}
-            onPress={libraryVm.scanMusic}
-          >
-            Scan Music
-          </AntIcon.Button>
-        </View>
-      ) : (
-        <>
-          <View>
-            <AntIcon.Button name="plus" onPress={libraryVm.selectMusicFiles}>
-              Add Music
-            </AntIcon.Button>
+
+      {/* 歌曲数量 */}
+      <View style={styles.countRow}>
+        <Text style={[styles.countText, { color: theme.textSecondary }]}>
+          {libraryData.musicList.length} 首歌曲
+        </Text>
+      </View>
+
+      {/* 列表 */}
+      <SwipeListView
+        data={[...libraryData.musicList]}
+        keyExtractor={(item) => String(item.id)}
+        style={{ paddingHorizontal: 16 }}
+        renderItem={({ item }) => (
+          <View style={{ backgroundColor: theme.surface }}>
+            <MusicItem
+              music={item}
+              onPress={(m) => playerVm.selectMusic(m)}
+            />
           </View>
-          <SwipeListView
-            data={[...libraryData.musicList]}
-            keyExtractor={(item) => String(item.id)}
-            style={{ paddingHorizontal: 16 }}
-            renderItem={({ item }) => (
-              <View style={{ backgroundColor: theme.surface }}>
-                <MusicItem
-                  music={item}
-                  onPress={(m) => playerVm.selectMusic(m)}
-                />
-              </View>
-            )}
-            renderHiddenItem={({ item }) => (
-              <View style={[styles.hiddenRow, { height: MUSIC_ITEM_HEIGHT }]}>
-                <TouchableOpacity
-                  style={styles.deleteBtn}
-                  onPress={() => handleDelete(item)}
-                >
-                  <Text style={styles.deleteText}>删除</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            rightOpenValue={-75}
-            disableRightSwipe
-          />
-        </>
-      )}
+        )}
+        renderHiddenItem={({ item }) => (
+          <View style={[styles.hiddenRow, { height: MUSIC_ITEM_HEIGHT }]}>
+            <TouchableOpacity
+              style={styles.deleteBtn}
+              onPress={() => libraryVm.deleteMusic(item)}
+            >
+              <Text style={styles.deleteText}>删除</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        rightOpenValue={-75}
+        disableRightSwipe
+      />
+
+      {/* 悬浮添加按钮 */}
+      <TouchableOpacity
+        style={[styles.fab, { backgroundColor: theme.tint }]}
+        activeOpacity={0.8}
+        onPress={libraryVm.selectMusicFiles}
+      >
+        <Feather name="plus" size={18} color="#fff" />
+        <Text style={styles.fabText}>添加</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  emptyArea: {
+  // ===== 空状态 =====
+  emptyContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 32,
   },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 6,
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    marginBottom: 32,
+  },
+  cardGroup: {
+    width: '100%',
+    gap: 12,
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+  },
+  cardIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardContent: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  cardDesc: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+
+  // ===== 有内容顶部 =====
+  countRow: {
+    paddingHorizontal: 16,
+    paddingBottom: 6,
+  },
+  countText: {
+    fontSize: 12,
+  },
+
+  // ===== 删除 =====
   hiddenRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -112,6 +234,29 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   deleteText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+
+  // ===== 悬浮按钮 =====
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 24,
+    gap: 6,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+  },
+  fabText: {
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',

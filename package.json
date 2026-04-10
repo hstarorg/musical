@@ -10,7 +10,9 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-    "prebuild": "expo prebuild --clean"
+    "prebuild": "expo prebuild --clean && node -e \"const f='package.json',d=require('./'+f);d.scripts.android='expo start --android';d.scripts.ios='expo start --ios';require('fs').writeFileSync(f,JSON.stringify(d,null,2)+'\\n')\"",
+    "prebuild:android": "expo prebuild --clean --platform android && node -e \"const f='package.json',d=require('./'+f);d.scripts.android='expo start --android';d.scripts.ios='expo start --ios';require('fs').writeFileSync(f,JSON.stringify(d,null,2)+'\\n')\"",
+    "prebuild:ios": "expo prebuild --clean --platform ios && node -e \"const f='package.json',d=require('./'+f);d.scripts.android='expo start --android';d.scripts.ios='expo start --ios';require('fs').writeFileSync(f,JSON.stringify(d,null,2)+'\\n')\""
   },
   "jest": {
     "preset": "jest-expo"
@@ -33,6 +35,7 @@
     "expo-file-system": "^55.0.15",
     "expo-font": "~55.0.6",
     "expo-linking": "~55.0.11",
+    "expo-media-library": "^55.0.14",
     "expo-router": "~55.0.11",
     "expo-splash-screen": "~55.0.16",
     "expo-sqlite": "^55.0.14",

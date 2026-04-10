@@ -1,9 +1,11 @@
 import {
   createAudioPlayer,
   setAudioModeAsync,
+  requestRecordingPermissionsAsync,
   AudioStatus,
 } from 'expo-audio';
 import type { AudioPlayer } from 'expo-audio';
+import { Platform } from 'react-native';
 import { EventEmitter } from 'events';
 
 export enum AMEventNames {
@@ -60,8 +62,11 @@ export class AudioManager {
 
       this.player = player;
 
-      // 开启音频采样用于波形可视化
+      // 开启音频采样用于波形可视化（Android 需要 RECORD_AUDIO 权限）
       try {
+        if (Platform.OS === 'android') {
+          await requestRecordingPermissionsAsync();
+        }
         player.setAudioSamplingEnabled(true);
       } catch {}
 

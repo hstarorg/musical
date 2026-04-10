@@ -1,0 +1,60 @@
+:root {
+  --vp-c-brand-1: #764ba2;
+  --vp-c-brand-2: #667eea;
+  --vp-c-brand-3: #764ba2;
+  --vp-c-brand-soft: rgba(118, 75, 162, 0.14);
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, #667eea33 0%, #764ba233 100%);
+  --vp-home-hero-image-filter: blur(56px);
+}
+
+.dark {
+  --vp-c-brand-1: #a78bfa;
+  --vp-c-brand-2: #818cf8;
+  --vp-c-brand-3: #a78bfa;
+  --vp-c-brand-soft: rgba(167, 139, 250, 0.14);
+}
+
+/* 功能卡片 hover 动效 */
+.VPFeature {
+  transition: transform 0.2s, box-shadow 0.2s !important;
+}
+.VPFeature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* 截图区域 */
+.screenshots {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 32px 0;
+}
+.screenshots img {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-height: 480px;
+}
+
+/* 技术栈标签 */
+.tech-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 16px 0;
+}
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+}

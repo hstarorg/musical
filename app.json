@@ -19,7 +19,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "package": "org.hstar.musical"
+      "package": "org.hstar.musical",
+      "permissions": ["RECORD_AUDIO", "READ_MEDIA_AUDIO"]
     },
     "web": {
       "output": "static",
@@ -40,6 +41,14 @@
         }
       ],
       "expo-font",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": false,
+          "savePhotosPermission": false,
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
       [
         "expo-build-properties",
         {
