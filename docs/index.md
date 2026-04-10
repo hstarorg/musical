@@ -67,10 +67,10 @@ Musical 是一个完全开源的项目，基于 MIT 许可证发布。
 欢迎提交 Issue 和 Pull Request，一起让它变得更好。
 
 <div style="display: flex; gap: 12px; padding: 16px 0;">
-  <a href="https://github.com/nicai/musical" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 20px; border-radius: 8px; background: var(--vp-c-brand-1); color: #fff; text-decoration: none; font-weight: 500;">
+  <a href="https://github.com/hstarorg/musical" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 20px; border-radius: 8px; background: var(--vp-c-brand-1); color: #fff; text-decoration: none; font-weight: 500;">
     ⭐ GitHub 仓库
   </a>
-  <a href="https://github.com/nicai/musical/issues" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 20px; border-radius: 8px; border: 1px solid var(--vp-c-brand-1); color: var(--vp-c-brand-1); text-decoration: none; font-weight: 500;">
+  <a href="https://github.com/hstarorg/musical/issues" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 20px; border-radius: 8px; border: 1px solid var(--vp-c-brand-1); color: var(--vp-c-brand-1); text-decoration: none; font-weight: 500;">
     🐛 报告问题
   </a>
 </div>
