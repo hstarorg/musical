@@ -18,7 +18,7 @@ const svg = `
     </linearGradient>
 
     <!-- 光晕 -->
-    <radialGradient id="glow" cx="50%" cy="40%" r="50%">
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
       <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
     </radialGradient>
@@ -37,17 +37,17 @@ const svg = `
   <rect width="${SIZE}" height="${SIZE}" rx="220" fill="url(#glow)"/>
 
   <!-- 波形条（短小，贴近白圆边缘） -->
-  ${generateBars(512, 480, 290, 60)}
+  ${generateBars(512, 512, 290, 60)}
 
   <!-- 中心白色大圆（带阴影） -->
-  <circle cx="512" cy="484" r="280" fill="rgba(0,0,0,0.12)"/>
-  <circle cx="512" cy="480" r="280" fill="white"/>
+  <circle cx="512" cy="516" r="280" fill="rgba(0,0,0,0.12)"/>
+  <circle cx="512" cy="512" r="280" fill="white"/>
 
-  <!-- 大音符（放大） -->
-  <g transform="translate(505, 458) scale(1.3)">
-    <ellipse cx="-8" cy="62" rx="52" ry="40" fill="#e63946"/>
-    <rect x="36" y="-110" width="14" height="176" rx="7" fill="#e63946"/>
-    <path d="M50,-110 C105,-92 98,-48 55,-45 L50,-50 Z" fill="#e63946"/>
+  <!-- 大音符（居中） -->
+  <g transform="translate(512, 512) scale(1.3)">
+    <ellipse cx="-24" cy="30" rx="52" ry="40" fill="#e63946"/>
+    <rect x="20" y="-140" width="14" height="174" rx="7" fill="#e63946"/>
+    <path d="M34,-140 C90,-122 82,-78 40,-75 L34,-80 Z" fill="#e63946"/>
   </g>
 </svg>
 `;
