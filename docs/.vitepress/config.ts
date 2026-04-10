@@ -1,10 +1,12 @@
 import { defineConfig } from 'vitepress';
 
+const base = process.env.DOCS_BASE || '/';
+
 export default defineConfig({
   title: 'Musical',
   description: '你的私人音乐空间',
-  base: '/musical/',
-  head: [['link', { rel: 'icon', type: 'image/png', href: '/musical/logo.png' }]],
+  base,
+  head: [['link', { rel: 'icon', type: 'image/png', href: `${base}logo.png` }]],
   themeConfig: {
     logo: '/logo.png',
     nav: [
