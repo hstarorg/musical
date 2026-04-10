@@ -40,7 +40,7 @@ export default function MeScreen() {
           <Text
             style={[styles.userInfo_bio_text, { color: theme.textSecondary }]}
           >
-            Love life, love coding...
+            热爱生活，热爱编程...
           </Text>
         </View>
       </View>

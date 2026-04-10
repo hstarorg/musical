@@ -33,9 +33,6 @@ export default function PlayScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>
       <View style={[styles.playScreen, { backgroundColor: theme.surface }]}>
-        <View style={styles.headerArea}>
-          <Text style={[styles.headerTitle, { color: theme.text }]}>Play</Text>
-        </View>
         <View style={styles.graphArea}>
           <AudioVisualizer
             isPlaying={playerData.isPlaying}
@@ -141,14 +138,6 @@ export default function PlayScreen() {
 const styles = StyleSheet.create({
   playScreen: {
     height: '100%',
-  },
-  headerArea: {
-    height: 40,
-  },
-  headerTitle: {
-    textAlign: 'center',
-    lineHeight: 40,
-    fontSize: 20,
   },
   graphArea: {
     height: '40%',

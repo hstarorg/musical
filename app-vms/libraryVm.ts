@@ -46,9 +46,10 @@ class LibraryViewModel extends ViewModelBase<LibraryData> {
     await this.loadMusicList();
   }
 
-  async scanMusic() {
-    await musicService.scanAndStoreLocalMusics();
+  async scanMusic(): Promise<number> {
+    const count = await musicService.scanAndStoreLocalMusics();
     await this.loadMusicList();
+    return count;
   }
 }
 

@@ -1,7 +1,7 @@
-import { Alert, PermissionsAndroid, Platform } from 'react-native';
+import { Alert } from 'react-native';
 import { MusicInfo } from '@/types/music-types';
 import { DbService } from './db.service';
-import { requestPermissionAndroid, getFiles } from '@/utils';
+import { scanMediaLibrary } from '@/utils/media-library';
 
 const ConfigKeys = {
   CurrentMusicKey: 'CurrentMusic',
@@ -197,37 +197,24 @@ class MusicService {
   }
 
   /**
-   * 扫描和存储音乐文件到 Sqlite（增量更新，不会清空已有数据）
+   * 从系统媒体库扫描音频文件（增量更新）
+   * @returns 新增数量
    */
-  async scanAndStoreLocalMusics() {
+  async scanAndStoreLocalMusics(): Promise<number> {
     await this.ensureInit();
-    if (Platform.OS === 'android') {
-      const granted = await requestPermissionAndroid(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
-      );
-      if (!granted) {
-        Alert.alert('您未允许授权');
-        return;
-      }
-    }
 
-    const files = await getFiles(
-      '/',
-      (item: string) => item.endsWith('.mp3'),
-      true
-    );
+    const allAudio = await scanMediaLibrary();
+    if (allAudio.length === 0) return 0;
 
     // 增量对比：只插入 DB 中不存在的新文件
     const existingPaths = await this.queryExistingPaths();
-    const newFiles = files.filter((file) => file.uri && !existingPaths.has(file.uri));
+    const newFiles = allAudio.filter((f) => !existingPaths.has(f.path));
 
     if (newFiles.length > 0) {
-      await this.addMusicListBatch(
-        newFiles.map((file) => ({ name: file.uri!, path: file.uri! }))
-      );
+      await this.addMusicListBatch(newFiles as MusicInfo[]);
     }
 
-    Alert.alert('扫描完毕', `新增 ${newFiles.length} 首，共 ${files.length} 首`);
+    return newFiles.length;
   }
 
   /**

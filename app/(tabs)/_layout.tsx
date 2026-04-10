@@ -17,7 +17,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="(home)/index"
         options={{
-          title: 'Play',
+          title: '播放',
           tabBarIcon: ({ color }) => (
             <Feather name="play-circle" size={24} color={color} />
           ),
@@ -26,7 +26,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="music/index"
         options={{
-          title: 'Music',
+          title: '音乐',
           tabBarIcon: ({ color }) => (
             <Feather name="music" size={24} color={color} />
           ),
@@ -35,7 +35,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="me/index"
         options={{
-          title: 'Me',
+          title: '我的',
           tabBarIcon: ({ color }) => (
             <Feather name="user" size={24} color={color} />
           ),
