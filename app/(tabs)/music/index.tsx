@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -32,7 +33,9 @@ export default function MusicScreen() {
     const count = await libraryVm.scanMusic();
     setScanning(false);
     if (count === 0) {
-      // 没找到新歌，不弹提示
+      Alert.alert('扫描完成', '未发现新的音乐文件，试试手动选择文件添加');
+    } else {
+      Alert.alert('扫描完成', `新增 ${count} 首歌曲`);
     }
   };
 
@@ -113,32 +116,6 @@ export default function MusicScreen() {
         barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
       />
 
-      {/* 顶部操作栏 */}
-      <View style={styles.toolbar}>
-        <TouchableOpacity
-          style={[styles.addPill, { backgroundColor: theme.background }]}
-          activeOpacity={0.7}
-          onPress={libraryVm.selectMusicFiles}
-        >
-          <Feather name="plus" size={18} color={theme.tint} />
-          <Text style={[styles.addPillText, { color: theme.textSecondary }]}>
-            添加音乐
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.scanBtn, { backgroundColor: theme.background }]}
-          activeOpacity={0.7}
-          onPress={handleScan}
-          disabled={scanning}
-        >
-          <Feather
-            name="search"
-            size={18}
-            color={scanning ? theme.textSecondary : theme.tint}
-          />
-        </TouchableOpacity>
-      </View>
-
       {/* 歌曲数量 */}
       <View style={styles.countRow}>
         <Text style={[styles.countText, { color: theme.textSecondary }]}>
@@ -172,6 +149,16 @@ export default function MusicScreen() {
         rightOpenValue={-75}
         disableRightSwipe
       />
+
+      {/* 悬浮添加按钮 */}
+      <TouchableOpacity
+        style={[styles.fab, { backgroundColor: theme.tint }]}
+        activeOpacity={0.8}
+        onPress={libraryVm.selectMusicFiles}
+      >
+        <Feather name="plus" size={18} color="#fff" />
+        <Text style={styles.fabText}>添加</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -224,31 +211,6 @@ const styles = StyleSheet.create({
   },
 
   // ===== 有内容顶部 =====
-  toolbar: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    gap: 10,
-  },
-  addPill: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 20,
-    gap: 8,
-  },
-  addPillText: {
-    fontSize: 14,
-  },
-  scanBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   countRow: {
     paddingHorizontal: 16,
     paddingBottom: 6,
@@ -272,6 +234,29 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   deleteText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+
+  // ===== 悬浮按钮 =====
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 24,
+    gap: 6,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+  },
+  fabText: {
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',

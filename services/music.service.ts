@@ -52,6 +52,16 @@ class MusicService {
     await this.db.execute(createMusicSql);
     await this.db.execute(createUniqueIndexSql);
     // 增量迁移：为已有表添加元数据列
+    // 将 NULL 转为空字符串，确保唯一索引能生效
+    await this.db.execute("UPDATE music SET artist = '' WHERE artist IS NULL;");
+    await this.db.execute("UPDATE music SET album = '' WHERE album IS NULL;");
+    // 清理重复数据（保留 id 最小的）
+    await this.db.execute(
+      "DELETE FROM music WHERE id NOT IN (SELECT MIN(id) FROM music GROUP BY name, artist);"
+    );
+    await this.db.execute(
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_music_name_artist ON music(name, artist);'
+    ).catch(() => {});
     await this.tryAddColumn('music', 'duration', 'integer');
     await this.tryAddColumn('music', 'artist', 'varchar(200)');
     await this.tryAddColumn('music', 'album', 'varchar(200)');
@@ -242,8 +252,8 @@ class MusicService {
       musicInfo.name,
       musicInfo.path,
       musicInfo.duration ?? null,
-      musicInfo.artist ?? null,
-      musicInfo.album ?? null,
+      musicInfo.artist ?? '',
+      musicInfo.album ?? '',
       musicInfo.artwork ?? null,
       musicInfo.track ?? null,
       musicInfo.year ?? null,

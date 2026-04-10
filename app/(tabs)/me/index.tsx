@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Image,
   FlatList,
   TouchableOpacity,
 } from 'react-native';
@@ -26,21 +25,17 @@ export default function MeScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.surface }}>
-      <View style={[styles.header, { backgroundColor: theme.background }]}>
-        <View style={styles.avatorArea}>
-          <Image
-            style={styles.avator}
-            source={require('@/assets/images/icon.png')}
-          />
-        </View>
-        <View style={styles.userInfo}>
-          <Text style={[styles.userInfo_text, { color: theme.text }]}>
-            Jay Hu
-          </Text>
-          <Text
-            style={[styles.userInfo_bio_text, { color: theme.textSecondary }]}
-          >
-            热爱生活，热爱编程...
+      {/* 品牌卡片 */}
+      <View style={[styles.brandCard, { backgroundColor: theme.tint + '12' }]}>
+        <MaterialCommunityIcons
+          name="music-circle"
+          size={40}
+          color={theme.tint}
+        />
+        <View style={styles.brandInfo}>
+          <Text style={[styles.brandName, { color: theme.text }]}>Musical</Text>
+          <Text style={[styles.brandSlogan, { color: theme.textSecondary }]}>
+            你的私人音乐空间
           </Text>
         </View>
       </View>
@@ -57,15 +52,17 @@ export default function MeScreen() {
           ]}
           onPress={() => meVm.setActiveTab('favorites')}
         >
-          <MaterialCommunityIcons name="heart" size={14} color={meData.activeTab === 'favorites' ? theme.tint : theme.textSecondary} />
+          <MaterialCommunityIcons
+            name="heart"
+            size={14}
+            color={meData.activeTab === 'favorites' ? theme.tint : theme.textSecondary}
+          />
           <Text
             style={[
               styles.tabText,
               {
                 color:
-                  meData.activeTab === 'favorites'
-                    ? theme.tint
-                    : theme.textSecondary,
+                  meData.activeTab === 'favorites' ? theme.tint : theme.textSecondary,
               },
             ]}
           >
@@ -82,15 +79,17 @@ export default function MeScreen() {
           ]}
           onPress={() => meVm.setActiveTab('history')}
         >
-          <MaterialCommunityIcons name="history" size={14} color={meData.activeTab === 'history' ? theme.tint : theme.textSecondary} />
+          <MaterialCommunityIcons
+            name="history"
+            size={14}
+            color={meData.activeTab === 'history' ? theme.tint : theme.textSecondary}
+          />
           <Text
             style={[
               styles.tabText,
               {
                 color:
-                  meData.activeTab === 'history'
-                    ? theme.tint
-                    : theme.textSecondary,
+                  meData.activeTab === 'history' ? theme.tint : theme.textSecondary,
               },
             ]}
           >
@@ -103,7 +102,17 @@ export default function MeScreen() {
       {meData.activeTab === 'favorites' ? (
         (meData.favorites?.length ?? 0) === 0 ? (
           <View style={styles.emptyState}>
-            <Text style={{ color: theme.textSecondary }}>暂无收藏</Text>
+            <MaterialCommunityIcons
+              name="heart-outline"
+              size={40}
+              color={theme.textSecondary}
+            />
+            <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
+              暂无收藏
+            </Text>
+            <Text style={[styles.emptyHint, { color: theme.textSecondary }]}>
+              播放时点击爱心即可收藏
+            </Text>
           </View>
         ) : (
           <FlatList
@@ -117,14 +126,18 @@ export default function MeScreen() {
         )
       ) : (meData.history?.length ?? 0) === 0 ? (
         <View style={styles.emptyState}>
-          <Text style={{ color: theme.textSecondary }}>暂无播放记录</Text>
+          <MaterialCommunityIcons
+            name="history"
+            size={40}
+            color={theme.textSecondary}
+          />
+          <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
+            暂无播放记录
+          </Text>
         </View>
       ) : (
         <>
-          <TouchableOpacity
-            style={styles.clearBtn}
-            onPress={meVm.clearHistory}
-          >
+          <TouchableOpacity style={styles.clearBtn} onPress={meVm.clearHistory}>
             <Text style={{ color: '#e74c3c', fontSize: 13 }}>清空历史</Text>
           </TouchableOpacity>
           <FlatList
@@ -142,29 +155,26 @@ export default function MeScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    padding: 16,
-    height: 96,
+  brandCard: {
     flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 12,
+    padding: 16,
+    borderRadius: 14,
+    gap: 12,
   },
-  avatorArea: {
-    width: 64,
-  },
-  avator: {
-    height: 64,
-    width: 64,
-    borderRadius: 32,
-  },
-  userInfo: {
+  brandInfo: {
     flex: 1,
-    paddingLeft: 8,
-    paddingTop: 8,
   },
-  userInfo_text: {
+  brandName: {
     fontSize: 20,
+    fontWeight: '700',
   },
-  userInfo_bio_text: {
-    fontSize: 14,
+  brandSlogan: {
+    fontSize: 13,
+    marginTop: 2,
   },
   tabBar: {
     flexDirection: 'row',
@@ -185,6 +195,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
+  },
+  emptyText: {
+    fontSize: 15,
+  },
+  emptyHint: {
+    fontSize: 12,
   },
   clearBtn: {
     alignItems: 'flex-end',

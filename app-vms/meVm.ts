@@ -6,6 +6,11 @@ type MeData = {
   favorites: MusicInfo[];
   history: (MusicInfo & { played_at: number })[];
   activeTab: 'favorites' | 'history';
+  stats: {
+    totalSongs: number;
+    totalFavorites: number;
+    totalPlayCount: number;
+  };
 };
 
 class MeViewModel extends ViewModelBase<MeData> {
@@ -14,6 +19,18 @@ class MeViewModel extends ViewModelBase<MeData> {
       favorites: [],
       history: [],
       activeTab: 'favorites',
+      stats: { totalSongs: 0, totalFavorites: 0, totalPlayCount: 0 },
+    };
+  }
+
+  async loadStats() {
+    const songs = await musicService.queryMusicList();
+    const favs = await musicService.queryFavorites();
+    const history = await musicService.queryPlayHistory();
+    this.data.stats = {
+      totalSongs: songs.length,
+      totalFavorites: favs.length,
+      totalPlayCount: history.length,
     };
   }
 
@@ -28,6 +45,7 @@ class MeViewModel extends ViewModelBase<MeData> {
   async clearHistory() {
     await musicService.clearPlayHistory();
     this.data.history = [];
+    this.data.stats = { ...this.data.stats, totalPlayCount: 0 };
   }
 
   setActiveTab(tab: 'favorites' | 'history') {
