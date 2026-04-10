@@ -47,7 +47,7 @@ export default function PlayScreen() {
           </View>
           <View style={{ overflow: 'hidden', height: 40 }}>
             <Text style={[styles.subTitle, { color: theme.textSecondary }]}>
-              {currentMusic?.artist || currentMusic?.path}
+              {currentMusic?.artist || currentMusic?.album || '未知艺术家'}
             </Text>
           </View>
         </View>
